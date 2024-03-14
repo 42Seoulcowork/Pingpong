@@ -62,6 +62,7 @@ class Router {
       route = this.getRoute(this.fallback);
     }
 
+    // route는 Component 인스턴스, 따라서 생성자에 target과 props를 전달
     new route(this.$app, {});
   }
 

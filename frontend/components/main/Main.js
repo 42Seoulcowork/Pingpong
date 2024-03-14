@@ -1,5 +1,6 @@
 import Header from "../header/Header.js";
 import Component from "../Component.js";
+import { router } from "../../utils/Router.js";
 
 export default class Main extends Component {
   didMount() {
@@ -11,7 +12,7 @@ export default class Main extends Component {
     return `
       <div class='main-page'>
         <header></header>
-        MainPage
+        <p>MainPage</p>
       </div>
     `;
   }
