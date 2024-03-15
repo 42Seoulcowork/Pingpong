@@ -3,11 +3,13 @@ import { customEventEmitter } from "../utils/helpers.js";
 
 class Router {
   $app;
+  rootStore;
   routes = {};
   fallback = "/";
 
-  constructor({ $app, routes, fallback = "/" }) {
+  constructor({ $app, routes, $store, fallback = "/" }) {
     this.$app = $app;
+    this.rootStore = $store;
     this.fallback = fallback;
 
     routes.forEach((route) => {
@@ -63,7 +65,7 @@ class Router {
     }
 
     // route는 Component 인스턴스, 따라서 생성자에 target과 props를 전달
-    new route(this.$app, {});
+    new route(this.$app, this.rootStore);
   }
 
   push(path) {

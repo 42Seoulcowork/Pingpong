@@ -1,11 +1,11 @@
 export default class Component {
   target;
-  props;
+  store;
   state;
 
-  constructor(target, props) {
+  constructor(target, rootStore) {
     this.target = target;
-    this.props = props;
+    this.store = rootStore;
     this.state = {};
     this.setup();
     this.mount();
