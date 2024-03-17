@@ -1,3 +1,5 @@
+import reducer from "./reducer.js";
+
 export default class Store {
   obj = {};
 
@@ -50,5 +52,18 @@ export default class Store {
         round3: "-",
       },
     };
+  }
+
+  dispatch(action, newState) {
+    const newObj = reducer(this.obj, action, newState);
+
+    if (newObj !== "") {
+      this.obj = newObj;
+    }
+  }
+
+  getState() {
+    const state = this.obj;
+    return state;
   }
 }

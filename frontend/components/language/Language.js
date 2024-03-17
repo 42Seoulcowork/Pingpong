@@ -10,7 +10,7 @@ export default class Main extends Component {
   }
 
   template() {
-    const languageId = this.store.obj.languageId;
+    const languageId = this.store.getState().languageId;
 
     return `
     <header></header>
@@ -45,17 +45,17 @@ export default class Main extends Component {
 
   setEvent() {
     this.addEvent("click", "#englishButton", () => {
-      this.store.obj.languageId = "en";
+      this.store.dispatch("languageId", "en");
       this.setCookie("languageId", "en", 3);
       this.mount();
     });
     this.addEvent("click", "#koreanButton", () => {
-      this.store.obj.languageId = "ko";
+      this.store.dispatch("languageId", "ko");
       this.setCookie("languageId", "ko", 3);
       this.mount();
     });
     this.addEvent("click", "#frenchButton", () => {
-      this.store.obj.languageId = "fr";
+      this.store.dispatch("languageId", "fr");
       this.setCookie("languageId", "fr", 3);
       this.mount();
     });

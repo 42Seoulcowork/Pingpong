@@ -8,8 +8,8 @@ import {
 
 export default class Header extends Component {
   template() {
-    const languageId = this.store.obj.languageId;
-    const loginStatus = this.store.obj.isLoggedIn;
+    const languageId = this.store.getState().languageId;
+    const loginStatus = this.store.getState().isLoggedIn;
 
     let logoutButtonHidden = "";
     if (loginStatus === false) {
@@ -52,7 +52,7 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
-      this.store.obj.isLoggedIn = false;
+      this.store.getState().isLoggedIn = false;
       router.push("/login");
     });
   }

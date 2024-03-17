@@ -10,14 +10,14 @@ export default class Mypage extends Component {
   }
 
   template() {
-    const loginStatus = this.store.obj.isLoggedIn;
+    const loginStatus = this.store.getState().isLoggedIn;
 
-    const languageId = this.store.obj.languageId;
+    const languageId = this.store.getState().languageId;
     const alertMessage = mypageButton[languageId].alert;
 
-    const intraID = this.store.obj.intraID;
-    const nickname = this.store.obj.nickname;
-    const numberOfWins = this.store.obj.numberOfWins;
+    const intraID = this.store.getState().intraID;
+    const nickname = this.store.getState().nickname;
+    const numberOfWins = this.store.getState().numberOfWins;
 
     if (loginStatus === true) {
       return `

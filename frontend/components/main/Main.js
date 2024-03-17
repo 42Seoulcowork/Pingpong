@@ -24,11 +24,11 @@ export default class Main extends Component {
 
   template() {
     if (this.getCookie("languageId") != null) {
-      this.store.obj.languageId = this.getCookie("languageId");
+      this.store.getState().languageId = this.getCookie("languageId");
     }
 
-    const loginStatus = this.store.obj.isLoggedIn;
-    const languageId = this.store.obj.languageId;
+    const loginStatus = this.store.getState().isLoggedIn;
+    const languageId = this.store.getState().languageId;
 
     if (loginStatus === true) {
       return `
