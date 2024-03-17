@@ -125,7 +125,7 @@ export const gameModeCard = {
   en: {
     play: "PINGPONG with various modes",
     Local: "Local",
-    LocalDescription: "Two people playing a game on one computer.",
+    LocalDescription: "Two people playing a game on one computer together.",
     Remote: "Remote",
     RemoteDescription: "Two people playing a game on different computers.",
     Tournament: "Tournament",
@@ -147,7 +147,8 @@ export const gameModeCard = {
   fr: {
     play: "PINGPONG avec différents modes",
     Local: "Local",
-    LocalDescription: "Deux personnes jouent à un jeu sur un ordinateur.",
+    LocalDescription:
+      "Deux personnes jouent à un jeu sur un ordinateur ensemble.",
     Remote: "À distance",
     RemoteDescription:
       "Deux personnes jouent à un jeu sur des ordinateurs différents.",

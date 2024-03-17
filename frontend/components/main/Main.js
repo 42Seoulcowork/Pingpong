@@ -30,14 +30,14 @@ export default class Main extends Component {
                 <div class="card m-2" style="width: 15rem;">
                   <div class="card-body">
                     <h5 class="card-title">${gameModeCard[languageId].Remote}</h5>
-                    <p class="card-text">${gameModeCard[languageId].RemoteDescription}</p>
+                    <p class="card-text text-start">${gameModeCard[languageId].RemoteDescription}</p>
                     <a href="#" class="btn btn-outline-success d-grid gap-2">${gameModeCard[languageId].start}</a>
                   </div>
                 </div>
                 <div class="card m-2" style="width: 15rem;">
                   <div class="card-body">
                     <h5 class="card-title">${gameModeCard[languageId].Tournament}</h5>
-                    <p class="card-text">${gameModeCard[languageId].TournamentDescription}</p>
+                    <p class="card-text text-start">${gameModeCard[languageId].TournamentDescription}</p>
                     <a href="#" class="btn btn-outline-info d-grid gap-2">${gameModeCard[languageId].start}</a>
                   </div>
                 </div>
