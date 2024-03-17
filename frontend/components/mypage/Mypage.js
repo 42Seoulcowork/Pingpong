@@ -10,7 +10,7 @@ export default class Mypage extends Component {
   }
 
   template() {
-    const loginStatus = this.store.Islogin;
+    const loginStatus = this.store.obj.isLoggedIn;
 
     const languageId = this.store.obj.languageId;
     const alertMessage = mypageButton[languageId].alert;
@@ -19,8 +19,8 @@ export default class Mypage extends Component {
     const nickname = this.store.obj.nickname;
     const numberOfWins = this.store.obj.numberOfWins;
 
-    // if (loginStatus) {
-    return `
+    if (loginStatus === true) {
+      return `
       <div class='mypage'>
         <header></header>
         <div class="container">
@@ -31,14 +31,6 @@ export default class Mypage extends Component {
                 <h3 class="card-title m-3 text-center">${mypageCard[languageId].greet}&nbsp;${intraID}</h3>
               </div>
               <div class="card-body">
-                <div class="row">
-                  <div class="text-center">
-                    <img
-                      alt="User Profile Picture"
-                      src="static/defaultProfile.png"
-                      class="object-fit-cover border rounded"
-                    />
-                  </div>
                   <div>
                     <table class="table table-user-information">
                       <tbody>
@@ -66,9 +58,9 @@ export default class Mypage extends Component {
         </div>
       </div>
     `;
-    // } else {
-    //   router.push("/login");
-    //   alert(alertMessage);
-    // }
+    } else {
+      alert(alertMessage);
+      router.push("/login");
+    }
   }
 }

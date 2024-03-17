@@ -9,13 +9,11 @@ import {
 export default class Header extends Component {
   template() {
     const languageId = this.store.obj.languageId;
+    const loginStatus = this.store.obj.isLoggedIn;
 
     let logoutButtonHidden = "";
-    console.log(this.store.obj.isLoggedIn);
-    if (this.store.obj.isLoggedIn) {
-      logoutButtonHidden = "";
-    } else {
-      logoutButtonHidden = ""; // "hidden"으로 수정해야 함 현재 test를 위해 임시로 빈 문자열
+    if (loginStatus === false) {
+      logoutButtonHidden = "hidden";
     }
 
     return `
@@ -54,6 +52,7 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
+      this.store.obj.isLoggedIn = false;
       router.push("/login");
     });
   }

@@ -30,7 +30,7 @@ export const loginButton = {
     loginDescription: "42 로그인 / 회원가입",
   },
   fr: {
-    loginDescription: "Se connecter / Création de compte avec 42",
+    loginDescription: "Se connecter / Créer un compte avec 42",
   },
 };
 
@@ -76,18 +76,21 @@ export const main = {
 export const languageSelector = {
   en: {
     language: "Language",
+    selectLanguage: "Select Language",
     english: "English",
     korean: "Korean",
     french: "french",
   },
   ko: {
     language: "언어",
+    selectLanguage: "언어 선택",
     english: "영어",
     korean: "한국어",
     french: "프랑스어",
   },
   fr: {
     language: "Langue",
+    selectLanguage: "Choisir la langue",
     english: "Anglais",
     korean: "Coréen",
     french: "Français",

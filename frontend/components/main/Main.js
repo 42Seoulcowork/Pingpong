@@ -9,11 +9,29 @@ export default class Main extends Component {
     new Header($header, this.store);
   }
 
+  getCookie(name) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split("; ");
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].split("=");
+      if (cookie[0] === encodeURIComponent(name)) {
+        return decodeURIComponent(cookie[1]);
+      }
+    }
+    return null;
+  }
+
   template() {
+    if (this.getCookie("languageId") != null) {
+      this.store.obj.languageId = this.getCookie("languageId");
+    }
+
+    const loginStatus = this.store.obj.isLoggedIn;
     const languageId = this.store.obj.languageId;
 
-    // if (this.store.Islogin) {
-    return `
+    if (loginStatus === true) {
+      return `
       <div class='main-page'>
         <header></header>
         <div class='d-flex flex-column align-items-center justify-content-center' style="height: 100vh;">
@@ -46,8 +64,8 @@ export default class Main extends Component {
         </div>
       </div>
     `;
-    // } else {
-    //   router.push("/login");
-    // }
+    } else {
+      router.push("/login");
+    }
   }
 }
