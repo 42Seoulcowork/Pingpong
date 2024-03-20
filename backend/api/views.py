@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions, generics, status
+from django.shortcuts import redirect
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import User
@@ -9,7 +10,14 @@ import requests
 class OauthAPI(APIView):
     def get(self, request):
         intra_id = self.__get_intra_id(request)
-        return Response(intra_id, status=status.HTTP_200_OK)
+        request.session['intra_id'] = intra_id
+        response = Response(
+            {
+                "session_id": request.session.session_key,
+            },
+            status=status.HTTP_200_OK)
+        return redirect('http://127.0.0.1:5500', response=response)
+    
     def __get_intra_id(self, request):
         access_token = self.__get_access_token(request)
         url = API_URL + '/v2/me/'
@@ -40,12 +48,52 @@ class OauthAPI(APIView):
 
 class UsersAPI(APIView):
     def get(self, request):
+        intra_id = request.session.get('intra_id')
+        if intra_id is None:
+            return Response(
+                {
+                    "message": "로그인이 필요합니다."
+                }
+                , status=status.HTTP_401_UNAUTHORIZED
+                )
         user = User.objects.all()
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MeAPI(APIView):
+    def get(self, request):
+        intra_id = request.session.get('intra_id')
+        if intra_id is None:
+            return Response(
+                {
+                    "message": "로그인이 필요합니다."
+                }
+                , status=status.HTTP_401_UNAUTHORIZED)
+        user = User.objects.get(intra_id=intra_id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class SessionAPI(APIView):
+    def get(self, request):
+        session_id = request.session.session_key
+        if session_id is None:
+            return Response(
+                {
+                    "message": "로그인이 필요합니다."
+                }
+                , status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {
+                "session_id": session_id
+            }
+            , status=status.HTTP_200_OK
+        )
+    def delete(self, request):
+        request.session.flush()
+        return Response(
+            {
+                "message": "로그아웃이 완료되었습니다."
+            },
+            status=status.HTTP_204_NO_CONTENT
+        )
