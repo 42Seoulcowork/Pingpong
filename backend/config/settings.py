@@ -32,6 +32,10 @@ OAUTH_SECRET = env('OAUTH_SECRET') #OAUTH_SECRET 값 불러오기
 API_URL = env('API_URL') #API_URL 값 불러오기
 REDIRECT_URI = env('REDIRECT_URI') #REDIRECT_URI 값 불러오기
 
+#CORS 설정
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
 ALLOWED_HOSTS = ['*'] #모든 호스트에 대해 허용
 
 
@@ -46,9 +50,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'corsheaders', #CORS 설정
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #CORS 설정
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
