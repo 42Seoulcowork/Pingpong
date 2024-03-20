@@ -1,4 +1,4 @@
-export default function (store, action, newState) {
+export default function reducer(store, action, newState) {
   let newStore = Object.assign({}, store);
 
   // just single depth action is allowed for now

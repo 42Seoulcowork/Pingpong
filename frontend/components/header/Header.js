@@ -52,7 +52,7 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
-      this.store.getState().isLoggedIn = false;
+      this.store.dispatch("isLoggedIn", false);
       router.push("/login");
     });
   }

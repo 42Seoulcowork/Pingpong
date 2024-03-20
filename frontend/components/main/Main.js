@@ -24,7 +24,7 @@ export default class Main extends Component {
 
   template() {
     if (this.getCookie("languageId") != null) {
-      this.store.getState().languageId = this.getCookie("languageId");
+      this.store.dispatch("languageId", this.getCookie("languageId"));
     }
 
     const loginStatus = this.store.getState().isLoggedIn;
