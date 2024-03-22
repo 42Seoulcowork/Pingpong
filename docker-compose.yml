@@ -1,0 +1,23 @@
+services:
+  db:
+    container_name: db
+    image: postgres:13
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+  backend:
+    container_name: backend
+    image: backend
+    build: ./backend
+    pull_policy: never
+    ports:
+      - 8000:8000
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
