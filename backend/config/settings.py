@@ -36,7 +36,7 @@ REDIRECT_URI = env('REDIRECT_URI') #REDIRECT_URI 값 불러오기
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -92,8 +92,14 @@ ASGI_APPLICATION = 'config.asgi.application' #ASGI 설정
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_NAME'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': 'db',  # Docker 컨테이너 이름
+        'PORT': '5432',  # PostgreSQL의 기본 포트
     }
 }
 
