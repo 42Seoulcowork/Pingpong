@@ -5,6 +5,7 @@ import Login from "./components/login/Login.js";
 import Language from "./components/language/Language.js";
 import Mypage from "./components/mypage/Mypage.js";
 import Component from "./components/Component.js";
+import "./scss/style.scss";
 
 const routes = [
   { path: "/", page: Main },
