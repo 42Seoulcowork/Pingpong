@@ -26,20 +26,13 @@ export default class Login extends Component {
         <div class="language-selector text-center">
           <h2 class="mb-4 fs-1 nanum-gothic-bold">${loginButton[languageId].loginDescription}</h2>
             <div class="d-grid gap-2 justify-content-center" role="group">
-              <div class="btn btn-dark text-white" role="button" id="loginButton" style="width: 15rem; height: 10rem;">
+              <a href="${OAuth_URL}" class="btn btn-dark text-white" role="button" style="width: 15rem; height: 10rem;">
                   <img src="42_logo.svg" class="mr-2 align-middle" alt="42_logo">
-              </div>
+              </a>
             </div>
         </div>
       </div>
     </div>
     `;
-  }
-
-  setEvent() {
-    this.addEvent("click", "#loginButton", () => {
-      this.store.dispatch("isLoggedIn", true);
-      router.push("/");
-    });
   }
 }
