@@ -1,5 +1,5 @@
 import Component from "../components/Component.js";
-import { customEventEmitter } from "../utils/helpers.js";
+import { customEventEmitter } from "./helpers.js";
 
 class Router {
   $app;

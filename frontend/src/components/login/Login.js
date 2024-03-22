@@ -27,7 +27,7 @@ export default class Login extends Component {
           <h2 class="mb-4 fs-1 nanum-gothic-bold">${loginButton[languageId].loginDescription}</h2>
             <div class="d-grid gap-2 justify-content-center" role="group">
               <div class="btn btn-dark text-white" role="button" id="loginButton" style="width: 15rem; height: 10rem;">
-                  <img src="static/42_logo.svg" class="mr-2 align-middle" alt="42_logo">
+                  <img src="42_logo.svg" class="mr-2 align-middle" alt="42_logo">
               </div>
             </div>
         </div>
