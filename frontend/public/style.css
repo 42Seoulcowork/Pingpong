@@ -1,0 +1,35 @@
+body {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.nanum-gothic-bold {
+  font-family: "Nanum Gothic", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+#mainHeader:hover {
+  color: #00bffe;
+  cursor: pointer;
+  transition: color 0.5s;
+}
+
+#languageHeader:hover {
+  color: #98f306;
+  cursor: pointer;
+  transition: color 0.5s;
+}
+
+#mypageHeader:hover {
+  color: #f6b65a;
+  cursor: pointer;
+  transition: color 0.5s;
+}
+
+#logoutHeader:hover {
+  color: #f6b65a;
+  cursor: pointer;
+  transition: color 0.5s;
+}
