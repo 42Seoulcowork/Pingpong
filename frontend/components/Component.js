@@ -4,12 +4,18 @@ export default class Component {
   state;
 
   constructor(target, rootStore) {
-    this.target = target;
-    this.store = rootStore;
-    this.state = {};
-    this.setup();
-    this.mount();
-    this.setEvent();
+    try {
+      this.target = target;
+      this.store = rootStore;
+      this.state = {};
+      this.setup();
+      this.mount();
+      this.setEvent();
+    } catch (e) {
+      if (e != "PassThrough") {
+        console.error(e);
+      }
+    }
   }
 
   setup() {}

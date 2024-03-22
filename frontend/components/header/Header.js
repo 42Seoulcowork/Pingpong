@@ -11,15 +11,12 @@ export default class Header extends Component {
     const languageId = this.store.getState().languageId;
     const loginStatus = this.store.getState().isLoggedIn;
 
-    let logoutButtonHidden = "";
-    if (loginStatus === false) {
-      logoutButtonHidden = "hidden";
-    }
+    let logoutButtonHiddenProperty = loginStatus === false ? "hidden" : "";
 
     return `
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container-fluid">
-        <div class="navbar-brand" id="mainHeader">PINGPONG</div>
+        <div class="navbar-brand nanum-gothic-bold" id="mainHeader">PINGPONG</div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,7 +29,7 @@ export default class Header extends Component {
               <div class="nav-link active" aria-current="page" id="mypageHeader">${mypageButton[languageId].mypage}</div>
             </li>
             <li class="nav-item">
-              <div class="nav-link active" aria-current="page" id="logoutHeader" ${logoutButtonHidden}>${logoutButton[languageId].logoutDescription}</div>
+              <div class="nav-link active" aria-current="page" id="logoutHeader" ${logoutButtonHiddenProperty}>${logoutButton[languageId].logoutDescription}</div>
             </li>
           </ul>
         </div>
@@ -52,6 +49,7 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
+      // 로그아웃 과정
       this.store.dispatch("isLoggedIn", false);
       router.push("/login");
     });

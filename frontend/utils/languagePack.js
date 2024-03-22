@@ -38,14 +38,17 @@ export const mypageButton = {
   en: {
     mypage: "Mypage",
     alert: "Please login first",
+    confirm: "Understood",
   },
   ko: {
     mypage: "마이페이지",
     alert: "먼저 로그인 해주세요",
+    confirm: "확인",
   },
   fr: {
     mypage: "Ma page",
     alert: "Veuillez d'abord vous connecter",
+    confirm: "Compris",
   },
 };
 
@@ -103,24 +106,21 @@ export const mypageCard = {
     nickname: "Nickname",
     profilePhoto: "Profile Photo",
     numberOfWins: "Number of Wins",
-    edit: "Profile Edit",
-    gameRecord: "Game Record",
+    edit: "Nickname Edit",
   },
   ko: {
     greet: "안녕하세요,",
     nickname: "닉네임",
     profilePhoto: "프로필 사진",
     numberOfWins: "승리 횟수",
-    edit: "정보 수정",
-    gameRecord: "게임 기록",
+    edit: "닉네임 수정",
   },
   fr: {
     greet: "Bonjour,",
     nickname: "Pseudo",
     profilePhoto: "Photo de profil",
     numberOfWins: "Nombre de victoires",
-    edit: "Modifier le profil",
-    gameRecord: "Journal de jeu",
+    edit: "Modifier le pseudo",
   },
 };
 
@@ -143,8 +143,7 @@ export const gameModeCard = {
     Remote: "리모트",
     RemoteDescription: "다른 컴퓨터에서 두 명이 게임을 하는 모드입니다.",
     Tournament: "토너먼트",
-    TournamentDescription:
-      "네 명이서 토너먼트 형식으로 게임을 하는 모드입니다.",
+    TournamentDescription: "네 명이서 토너먼트로 게임을 하는 모드입니다.",
     start: "시작",
   },
   fr: {
@@ -157,12 +156,12 @@ export const gameModeCard = {
       "Deux personnes jouent à un jeu sur des ordinateurs différents.",
     Tournament: "Tournoi",
     TournamentDescription:
-      "Quatre personnes jouent à des jeux à distance sous forme de tournoi.",
+      "Quatre personnes jouent à des jeux en ligne en tournoi.",
     start: "Démarrer",
   },
 };
 
-export const gameCustomizationModal = {
+export const gameSettingCard = {
   en: {
     setting: "Setting",
     nickname: "Nickname",

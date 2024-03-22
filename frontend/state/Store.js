@@ -13,7 +13,7 @@ export default class Store {
       languageId: "ko",
 
       // Game Option
-      gameMode: "Local", // or "Remote" or "Tournament"
+      gameMode: "local", // or "remote" or "tournament"
 
       // 공통 게임 정보: 게임이 종료되었을 때 업데이트
       endReason: "normal", // or "opponentLeft" or "userLeft"
