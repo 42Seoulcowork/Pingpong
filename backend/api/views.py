@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import User
 from .serializers import UserSerializer
-from config.settings import API_URL, UID, OAUTH_SECRET, REDIRECT_URI
+from config.settings import API_URL, UID, OAUTH_SECRET, REDIRECT_URI, FRONT_URL
 import requests
 
 class OauthAPI(APIView):
@@ -16,7 +16,7 @@ class OauthAPI(APIView):
                 "session_id": request.session.session_key,
             },
             status=status.HTTP_200_OK)
-        return redirect('http://127.0.0.1:5500', response=response)
+        return redirect(FRONT_URL, response=response)
     
     def __get_intra_id(self, request):
         access_token = self.__get_access_token(request)

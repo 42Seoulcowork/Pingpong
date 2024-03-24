@@ -31,6 +31,7 @@ UID = env('UID') #UID 값 불러오기
 OAUTH_SECRET = env('OAUTH_SECRET') #OAUTH_SECRET 값 불러오기
 API_URL = env('API_URL') #API_URL 값 불러오기
 REDIRECT_URI = env('REDIRECT_URI') #REDIRECT_URI 값 불러오기
+FRONT_URL = env('FRONT_URL') #FRONT_URL 값 불러오기
 
 #CORS 설정
 CORS_ORIGIN_ALLOW_ALL = True

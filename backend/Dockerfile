@@ -16,10 +16,11 @@ COPY ./game ./game
 COPY .env .env
 COPY manage.py .
 COPY requirements.txt .
-# COPY db.sqlite3 .
 
 RUN pip install -r requirements.txt --no-cache-dir
 
+COPY ./conf.sh .
+
 EXPOSE 8000
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/usr/bin/dumb-init", "--", "sh", "conf.sh"]
