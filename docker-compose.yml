@@ -1,4 +1,16 @@
 services:
+  frontend:
+    container_name: frontend
+    image: frontend
+    pull_policy: never
+    build: ./frontend
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - backend
+
+      
   db:
     container_name: db
     image: postgres:13
@@ -21,3 +33,6 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+
+volumes:
+  frontend_data:
