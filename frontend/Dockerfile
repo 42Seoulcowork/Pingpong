@@ -23,7 +23,9 @@ COPY vite.config.js /app/vite.config.js
 
 RUN npm install && npm run build
 
-RUN mv /app/dist/* /var/www/ && rm -rf /app
+RUN mv /app/dist/* /var/www/
+
+# RUN mv /app/* /var/www/
 
 EXPOSE 443 80
 
