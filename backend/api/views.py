@@ -11,12 +11,7 @@ class OauthAPI(APIView):
     def get(self, request):
         intra_id = self.__get_intra_id(request)
         request.session['intra_id'] = intra_id
-        response = Response(
-            {
-                "session_id": request.session.session_key,
-            },
-            status=status.HTTP_200_OK)
-        return redirect(FRONT_URL, response=response)
+        return redirect(FRONT_URL)
     
     def __get_intra_id(self, request):
         access_token = self.__get_access_token(request)
