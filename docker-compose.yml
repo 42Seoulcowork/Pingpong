@@ -9,8 +9,11 @@ services:
       - 443:443
     depends_on:
       - backend
+    volumes:
+      - type: bind
+        source: ./frontend/dist
+        target: /var/www
 
-      
   db:
     container_name: db
     image: postgres:13
@@ -33,6 +36,3 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
-
-volumes:
-  frontend_data:
