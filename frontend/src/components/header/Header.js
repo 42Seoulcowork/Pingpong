@@ -1,5 +1,6 @@
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
+import { logout } from "../../utils/authenticator.js";
 import {
   mypageButton,
   languageSelector,
@@ -49,9 +50,12 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
-      // 로그아웃 과정
-      this.store.dispatch("isLoggedIn", false);
-      router.push("/login");
+      logout(this.store);
+      if (this.store.getState().isLoggedIn === false) {
+        router.push("/login");
+      } else {
+        alert("로그아웃에 실패했습니다.");
+      }
     });
   }
 }

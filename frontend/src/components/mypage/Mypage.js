@@ -3,13 +3,13 @@ import Component from "../Component.js";
 import MypageModal from "./MypageModal.js";
 import { router } from "../../utils/Router.js";
 import { mypageButton, mypageCard } from "../../utils/languagePack.js";
+import * as bootstrap from "bootstrap";
 export default class Mypage extends Component {
   didMount() {
     const $header = this.target.querySelector("header");
     new Header($header, this.store);
 
     const loginStatus = this.store.getState().isLoggedIn;
-
     if (loginStatus === false) {
       const $mypageModal = this.target.querySelector("#mypageModalDoor");
       new MypageModal($mypageModal, this.store);
