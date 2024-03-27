@@ -1,16 +1,14 @@
 import json
+from channels.generic.websocket import AsyncWebsocketConsumer
 
-from channels.generic.websocket import WebsocketConsumer
+class GameConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
 
-
-class GameConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
-
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         pass
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         name = text_data_json["name"]
 
@@ -18,4 +16,4 @@ class GameConsumer(WebsocketConsumer):
             "name": name,
             "greeting": "Hello, " + name + "!"
         }
-        self.send(text_data=json.dumps(data))
+        await self.send(text_data=json.dumps(data))
