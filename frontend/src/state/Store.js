@@ -10,6 +10,7 @@ export default class Store {
       intraID: "Defalut_ID",
       nickname: "Default_Nickname",
       numberOfWins: 0,
+      numberOfLoses: 0,
       languageId: "ko",
 
       // Game Option

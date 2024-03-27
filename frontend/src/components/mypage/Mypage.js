@@ -1,15 +1,17 @@
 import Header from "../header/Header.js";
 import Component from "../Component.js";
 import MypageModal from "./MypageModal.js";
+import { getProfileInfo } from "../../utils/apiHandler.js";
 import { router } from "../../utils/Router.js";
 import { mypageButton, mypageCard } from "../../utils/languagePack.js";
+import * as bootstrap from "bootstrap";
+
 export default class Mypage extends Component {
   didMount() {
     const $header = this.target.querySelector("header");
     new Header($header, this.store);
 
     const loginStatus = this.store.getState().isLoggedIn;
-
     if (loginStatus === false) {
       const $mypageModal = this.target.querySelector("#mypageModalDoor");
       new MypageModal($mypageModal, this.store);
@@ -22,9 +24,11 @@ export default class Mypage extends Component {
   template() {
     const languageId = this.store.getState().languageId;
 
+    getProfileInfo(this.store);
     const intraID = this.store.getState().intraID;
     const nickname = this.store.getState().nickname;
     const numberOfWins = this.store.getState().numberOfWins;
+    const numberOfLoses = this.store.getState().numberOfLoses;
 
     return `
     <div class="mypage">
@@ -52,6 +56,10 @@ export default class Mypage extends Component {
                     <tr>
                       <td>${mypageCard[languageId].numberOfWins}:</td>
                       <td>${numberOfWins}</td>
+                    </tr>
+                    <tr>
+                      <td>${mypageCard[languageId].numberOfLoses}:</td>
+                      <td>${numberOfLoses}</td>
                     </tr>
                     <tr></tr>
                   </tbody>
