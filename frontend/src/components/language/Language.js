@@ -2,6 +2,7 @@ import Header from "../header/Header.js";
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
 import { languageSelector } from "../../utils/languagePack.js";
+import { setLanguage } from "../../utils/cookieHandler.js";
 
 export default class Main extends Component {
   didMount() {
@@ -29,37 +30,17 @@ export default class Main extends Component {
     `;
   }
 
-  setCookie(name, value, daysToExpire) {
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + daysToExpire);
-
-    const cookieValue =
-      encodeURIComponent(name) +
-      "=" +
-      encodeURIComponent(value) +
-      "; expires=" +
-      expirationDate.toUTCString() +
-      "; path=/";
-    document.cookie = cookieValue;
-  }
-
   setEvent() {
     this.addEvent("click", "#englishButton", () => {
-      this.store.dispatch("languageId", "en");
-      this.setCookie("languageId", "en", 3);
-      document.documentElement.lang = "en";
+      setLanguage("languageId", "en", 3, this.store);
       this.mount();
     });
     this.addEvent("click", "#koreanButton", () => {
-      this.store.dispatch("languageId", "ko");
-      this.setCookie("languageId", "ko", 3);
-      document.documentElement.lang = "ko";
+      setLanguage("languageId", "ko", 3, this.store);
       this.mount();
     });
     this.addEvent("click", "#frenchButton", () => {
-      this.store.dispatch("languageId", "fr");
-      this.setCookie("languageId", "fr", 3);
-      document.documentElement.lang = "fr";
+      setLanguage("languageId", "fr", 3, this.store);
       this.mount();
     });
   }

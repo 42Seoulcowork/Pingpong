@@ -3,6 +3,8 @@ import Component from "../Component.js";
 import GameSettingModal from "../game/GameSettingModal.js";
 import { router } from "../../utils/Router.js";
 import { gameModeCard } from "../../utils/languagePack.js";
+import { sessionAuthentication } from "../../utils/apiHandler.js";
+import { getCookie } from "../../utils/cookieHandler.js";
 
 export default class Main extends Component {
   didMount() {
@@ -15,23 +17,16 @@ export default class Main extends Component {
     new GameSettingModal($gameSettingModal, this.store);
   }
 
-  getCookie(name) {
-    const cookieString = document.cookie;
-    const cookies = cookieString.split("; ");
-
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].split("=");
-      if (cookie[0] === encodeURIComponent(name)) {
-        return decodeURIComponent(cookie[1]);
-      }
-    }
-    return null;
-  }
-
   template() {
+    const lastLanguageId = getCookie("languageId");
+    if (lastLanguageId) {
+      this.store.dispatch("languageId", lastLanguageId);
+      document.documentElement.lang = lastLanguageId;
+    }
     const languageId = this.store.getState().languageId;
-    const loginStatus = this.store.getState().isLoggedIn;
 
+    sessionAuthentication(this.store);
+    const loginStatus = this.store.getState().isLoggedIn;
     if (loginStatus === false) {
       router.push("/login");
       throw "PassThrough";

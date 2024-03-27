@@ -1,3 +1,5 @@
+import { router } from "../utils/Router";
+
 export default class Component {
   target;
   store;
