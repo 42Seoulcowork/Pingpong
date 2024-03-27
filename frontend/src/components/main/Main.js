@@ -3,7 +3,7 @@ import Component from "../Component.js";
 import GameSettingModal from "../game/GameSettingModal.js";
 import { router } from "../../utils/Router.js";
 import { gameModeCard } from "../../utils/languagePack.js";
-import { sessionAuthentication } from "../../utils/authenticator.js";
+import { sessionAuthentication } from "../../utils/apiHandler.js";
 import { getCookie } from "../../utils/cookieHandler.js";
 
 export default class Main extends Component {
@@ -18,13 +18,11 @@ export default class Main extends Component {
   }
 
   template() {
-    console.log("Main");
     const lastLanguageId = getCookie("languageId");
     if (lastLanguageId) {
       this.store.dispatch("languageId", lastLanguageId);
       document.documentElement.lang = lastLanguageId;
     }
-
     const languageId = this.store.getState().languageId;
 
     sessionAuthentication(this.store);

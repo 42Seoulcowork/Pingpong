@@ -1,6 +1,6 @@
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
-import { logout } from "../../utils/authenticator.js";
+import { logout } from "../../utils/apiHandler.js";
 import {
   mypageButton,
   languageSelector,
