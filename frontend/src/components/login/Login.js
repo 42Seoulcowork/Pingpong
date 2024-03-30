@@ -3,10 +3,7 @@ import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
 import { login, loginButton } from "../../utils/languagePack.js";
 export default class Login extends Component {
-  didMount() {
-    const $header = this.target.querySelector("header");
-    new Header($header, this.store);
-  }
+  didMount() {}
 
   template() {
     const languageId = this.store.getState().languageId;
@@ -20,7 +17,6 @@ export default class Login extends Component {
     }
 
     return `
-    <header></header>
     <div class='d-flex flex-column align-items-center justify-content-center' style="height: 100vh;">
       <div class='login-page'>
         <div class="language-selector text-center">

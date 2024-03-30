@@ -1,20 +1,14 @@
-import Header from "../header/Header.js";
 import Component from "../Component.js";
-import { router } from "../../utils/Router.js";
 import { languageSelector } from "../../utils/languagePack.js";
 import { setLanguage } from "../../utils/cookieHandler.js";
+import { headerLanguageChanger } from "../header/headerHandler.js";
+import { router } from "../../utils/Router.js";
 
-export default class Main extends Component {
-  didMount() {
-    const $header = this.target.querySelector("header");
-    new Header($header, this.store);
-  }
-
+export default class Language extends Component {
   template() {
     const languageId = this.store.getState().languageId;
 
     return `
-    <header></header>
     <div class='d-flex flex-column align-items-center justify-content-center' style="height: 100vh;">
       <div class='language-page'>
         <div class="language-selector text-center">
@@ -33,15 +27,18 @@ export default class Main extends Component {
   setEvent() {
     this.addEvent("click", "#englishButton", () => {
       setLanguage("languageId", "en", 3, this.store);
-      this.mount();
+      headerLanguageChanger("en");
+      router.push("/language");
     });
     this.addEvent("click", "#koreanButton", () => {
       setLanguage("languageId", "ko", 3, this.store);
-      this.mount();
+      headerLanguageChanger("ko");
+      router.push("/language");
     });
     this.addEvent("click", "#frenchButton", () => {
       setLanguage("languageId", "fr", 3, this.store);
-      this.mount();
+      headerLanguageChanger("fr");
+      router.push("/language");
     });
   }
 }

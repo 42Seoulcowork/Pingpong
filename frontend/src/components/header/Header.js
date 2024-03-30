@@ -1,4 +1,6 @@
 import Component from "../Component.js";
+import logoutRestrictionModal from "./logoutRestrictionModal.js";
+import { logoutButtonHandler } from "./headerHandler.js";
 import { router } from "../../utils/Router.js";
 import { logout } from "../../utils/apiHandler.js";
 import {
@@ -8,11 +10,12 @@ import {
 } from "../../utils/languagePack.js";
 
 export default class Header extends Component {
+  didMount() {
+    logoutButtonHandler(this.store);
+  }
+
   template() {
     const languageId = this.store.getState().languageId;
-    const loginStatus = this.store.getState().isLoggedIn;
-
-    let logoutButtonHiddenProperty = loginStatus === false ? "hidden" : "";
 
     return `
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -30,12 +33,13 @@ export default class Header extends Component {
               <div class="nav-link active" aria-current="page" id="mypageHeader">${mypageButton[languageId].mypage}</div>
             </li>
             <li class="nav-item">
-              <div class="nav-link active" aria-current="page" id="logoutHeader" ${logoutButtonHiddenProperty}>${logoutButton[languageId].logoutDescription}</div>
+              <div class="nav-link active" aria-current="page" id="logoutHeader" hidden>${logoutButton[languageId].logoutDescription}</div>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+    <div id="logoutRestrictionModal"></div>
     `;
   }
 
@@ -50,12 +54,22 @@ export default class Header extends Component {
       router.push("/language");
     });
     this.addEvent("click", "#logoutHeader", () => {
-      logout(this.store);
-      if (this.store.getState().isLoggedIn === false) {
-        router.push("/login");
-      } else {
-        alert("로그아웃에 실패했습니다.");
-      }
+      logout(
+        () => {
+          this.store.dispatch("isLoggedIn", false);
+          logoutButtonHandler(this.store);
+          router.push("/login");
+        },
+        () => {
+          const $logoutRestrictionModal = this.target.querySelector(
+            "#logoutRestrictionModal"
+          );
+          new logoutRestrictionModal($logoutRestrictionModal, this.store);
+
+          const modal = new bootstrap.Modal("#logoutRestrictionModal");
+          modal.show();
+        }
+      );
     });
   }
 }
