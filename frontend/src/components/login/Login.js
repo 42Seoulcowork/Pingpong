@@ -1,7 +1,8 @@
-import Header from "../header/Header.js";
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
-import { login, loginButton } from "../../utils/languagePack.js";
+import { loginButton } from "../../utils/languagePack.js";
+import Logo from "../../../public/42_logo.svg";
+
 export default class Login extends Component {
   didMount() {}
 
@@ -23,7 +24,7 @@ export default class Login extends Component {
           <h2 class="mb-4 fs-1 nanum-gothic-bold">${loginButton[languageId].loginDescription}</h2>
             <div class="d-grid gap-2 justify-content-center" role="group">
               <a href="${OAuth_URL}" class="btn btn-dark text-white" role="button" id="loginButton" style="width: 15rem; height: 10rem;">
-                  <img src="42_logo.svg" class="mr-2 align-middle" alt="42_logo">
+                  <img src="${Logo}" class="mr-2 align-middle" alt="42_logo">
               </a>
             </div>
         </div>

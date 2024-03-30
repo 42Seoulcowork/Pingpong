@@ -109,6 +109,7 @@ export const mypageCard = {
     nickname: "Nickname",
     profilePhoto: "Profile Photo",
     numberOfWins: "Number of Wins",
+    numberOfLoses: "Number of Loses",
     edit: "Nickname Edit",
   },
   ko: {
@@ -116,6 +117,7 @@ export const mypageCard = {
     nickname: "닉네임",
     profilePhoto: "프로필 사진",
     numberOfWins: "승리 횟수",
+    numberOfLoses: "패배 횟수",
     edit: "닉네임 수정",
   },
   fr: {
@@ -123,6 +125,7 @@ export const mypageCard = {
     nickname: "Pseudo",
     profilePhoto: "Photo de profil",
     numberOfWins: "Nombre de victoires",
+    numberOfLoses: "Nombre de défaites",
     edit: "Modifier le pseudo",
   },
 };
