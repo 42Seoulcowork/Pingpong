@@ -5,9 +5,9 @@ export default class MypageHTML extends Component {
   template() {
     const languageId = this.store.getState().languageId;
     const intraID = this.store.getState().intraID;
-    const nickname = this.store.getState().nickname;
     const numberOfWins = this.store.getState().numberOfWins;
     const numberOfLoses = this.store.getState().numberOfLoses;
+    const numberOfPlays = numberOfWins + numberOfLoses;
 
     return `
     <div class="container">
@@ -27,10 +27,6 @@ export default class MypageHTML extends Component {
                 <table class="table table-user-information align-middle">
                   <tbody>
                     <tr>
-                      <td>${mypageCard[languageId].nickname}:</td>
-                      <td>${nickname}</td>
-                    </tr>
-                    <tr>
                       <td>${mypageCard[languageId].numberOfWins}:</td>
                       <td>${numberOfWins}</td>
                     </tr>
@@ -38,14 +34,13 @@ export default class MypageHTML extends Component {
                       <td>${mypageCard[languageId].numberOfLoses}:</td>
                       <td>${numberOfLoses}</td>
                     </tr>
+                    <tr>
+                    <td>${mypageCard[languageId].numberOfPlays}:</td>
+                    <td>${numberOfPlays}</td>
+                  </tr>
                     <tr></tr>
                   </tbody>
                 </table>
-                <div class="row mx-1">
-                  <a href="#" class="btn btn-outline-info col-auto ms-auto">
-                    ${mypageCard[languageId].edit}
-                  </a>
-                </div>
               </div>
             </div>
           </div>

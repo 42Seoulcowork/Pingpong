@@ -106,27 +106,24 @@ export const languageSelector = {
 export const mypageCard = {
   en: {
     greet: "Hello,",
-    nickname: "Nickname",
     profilePhoto: "Profile Photo",
     numberOfWins: "Number of Wins",
     numberOfLoses: "Number of Loses",
-    edit: "Nickname Edit",
+    numberOfPlays: "Number of Plays",
   },
   ko: {
     greet: "안녕하세요,",
-    nickname: "닉네임",
     profilePhoto: "프로필 사진",
     numberOfWins: "승리 횟수",
     numberOfLoses: "패배 횟수",
-    edit: "닉네임 수정",
+    numberOfPlays: "플레이 횟수",
   },
   fr: {
     greet: "Bonjour,",
-    nickname: "Pseudo",
     profilePhoto: "Photo de profil",
     numberOfWins: "Nombre de victoires",
     numberOfLoses: "Nombre de défaites",
-    edit: "Modifier le pseudo",
+    numberOfPlays: "Nombre de jeux",
   },
 };
 
