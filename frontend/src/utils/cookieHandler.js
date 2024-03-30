@@ -1,4 +1,4 @@
-export function getCookie(name) {
+export const getCookie = (name) => {
   const cookieString = document.cookie;
   const cookies = cookieString.split("; ");
 
@@ -9,9 +9,9 @@ export function getCookie(name) {
     }
   }
   return null;
-}
+};
 
-export function setCookie(name, value, daysToExpire) {
+export const setCookie = (name, value, daysToExpire) => {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + daysToExpire);
 
@@ -23,10 +23,10 @@ export function setCookie(name, value, daysToExpire) {
     expirationDate.toUTCString() +
     "; path=/";
   document.cookie = cookieValue;
-}
+};
 
-export function setLanguage(name, value, daysToExpire, store) {
+export const setLanguage = (name, value, daysToExpire, store) => {
   store.dispatch("languageId", value);
   setCookie(name, value, daysToExpire);
   document.documentElement.lang = value;
-}
+};

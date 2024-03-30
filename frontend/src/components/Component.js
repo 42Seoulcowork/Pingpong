@@ -13,9 +13,9 @@ export default class Component {
       this.setup();
       this.mount();
       this.setEvent();
-    } catch (e) {
-      if (e != "PassThrough") {
-        console.error(e);
+    } catch (event) {
+      if (event != "PassThrough") {
+        console.error(event);
       }
     }
   }
@@ -53,12 +53,7 @@ export default class Component {
 
   setEvent() {}
   addEvent(eventType, selector, callback) {
-    const children = [...this.target.querySelectorAll(selector)];
-    const isTarget = (target) =>
-      children.includes(target) || target.closest(selector);
-    this.target.addEventListener(eventType, (event) => {
-      if (!isTarget(event.target)) return false;
-      callback(event);
-    });
+    const child = this.target.querySelector(selector);
+    child.addEventListener(eventType, callback);
   }
 }

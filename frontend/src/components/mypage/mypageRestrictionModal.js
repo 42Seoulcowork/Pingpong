@@ -2,12 +2,12 @@ import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
 import { mypageButton } from "../../utils/languagePack.js";
 
-export default class MypageModal extends Component {
+export default class mypageRestrictionModal extends Component {
   template() {
     const languageId = this.store.getState().languageId;
 
     return `
-    <div class="modal fade" id="mypageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mypageModalLabel" aria-hidden="true">
+    <div class="modal fade" id="mypageRestrictionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mypageModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">

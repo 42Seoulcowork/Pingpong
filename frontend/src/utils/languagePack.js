@@ -55,12 +55,15 @@ export const mypageButton = {
 export const logoutButton = {
   en: {
     logoutDescription: "Logout",
+    logoutRestriction: "Logout failed",
   },
   ko: {
     logoutDescription: "로그아웃",
+    logoutRestriction: "로그아웃 실패",
   },
   fr: {
     logoutDescription: "Déconnexion",
+    logoutRestriction: "Déconnexion échouée",
   },
 };
 

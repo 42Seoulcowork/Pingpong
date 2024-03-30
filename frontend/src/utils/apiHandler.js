@@ -1,42 +1,65 @@
-export function sessionAuthentication(store) {
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/session", false);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
-    if (xhr.status === 200) {
-      store.dispatch("isLoggedIn", true);
-    } else {
-      store.dispatch("isLoggedIn", false);
-    }
-  } catch (error) {
-    store.dispatch("isLoggedIn", false);
-  }
-}
+export const sessionAuthentication = (trueCallback, falseCallback) => {
+  fetch("/api/session", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((response) => {
+      if (response.ok) {
+        trueCallback();
+      } else {
+        falseCallback();
+      }
+    })
+    .catch((e) => {
+      falseCallback();
+    });
+};
 
-export function logout(store) {
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("DELETE", "/api/session", false);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
-    if (xhr.status === 204) {
-      store.dispatch("isLoggedIn", false);
-    }
-  } catch (e) {}
-}
+export const logout = async (trueCallback, falseCallback) => {
+  fetch("/api/session", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((response) => {
+      if (response.ok) {
+        trueCallback();
+      } else {
+        falseCallback();
+      }
+    })
+    .catch(() => {
+      falseCallback();
+    });
+};
 
-export function getProfileInfo(store) {
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/me", false);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
-    if (xhr.status === 200) {
-      const profileInfo = JSON.parse(xhr.responseText);
-      store.dispatch("intraID", profileInfo.intra_id);
-      store.dispatch("numberOfWins", profileInfo.win);
-      store.dispatch("numberOfLoses", profileInfo.lose);
-    }
-  } catch (error) {}
-}
+export const getProfileInfo = (trueCallback, falseCallback) => {
+  let status = 0;
+
+  fetch("/api/me", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then((response) => {
+      status = response.status;
+      return response.json();
+    })
+    .then((data) => {
+      if (status === 200) {
+        trueCallback(data);
+      } else {
+        falseCallback();
+      }
+    })
+    .catch((e) => {
+      falseCallback();
+    });
+};

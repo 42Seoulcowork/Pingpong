@@ -30,14 +30,16 @@ class Router {
 
   onRouteChangeHandler(event) {
     const path = event.detail.path;
+    const element = event.detail.element;
+
     history.pushState(event.detail, "", path);
 
-    this.renderPage(path);
+    this.renderPage(path, element);
   }
 
-  onRoutePopHandler() {
+  onRoutePopHandler(event) {
     const path = window.location.pathname;
-    this.renderPage(path);
+    this.renderPage(path, "app");
   }
 
   hasRoute(path) {
@@ -48,7 +50,7 @@ class Router {
     return this.routes[path];
   }
 
-  renderPage(path) {
+  renderPage(path, element) {
     let route;
 
     /* 동적 라우팅 처리 */
@@ -64,14 +66,18 @@ class Router {
       route = this.getRoute(this.fallback);
     }
 
+    let $element = this.$app.querySelector("#" + element);
+    if (!$element) $element = this.$app.querySelector("#main");
+
     // route는 Component 인스턴스, 따라서 생성자에 target과 props를 전달
-    new route(this.$app, this.rootStore);
+    new route($element, this.rootStore);
   }
 
-  push(path) {
+  push(path, element = "main") {
     customEventEmitter("moveRoutes", {
       ...history.state,
       path,
+      element,
     });
   }
 }
@@ -82,13 +88,14 @@ export function initRouter(options) {
   const routerObj = new Router(options);
 
   router = {
-    push: (path) => routerObj.push(path),
+    push: (path, element) => routerObj.push(path, element),
   };
 
   customEventEmitter(
     "moveRoutes",
     history.state ?? {
       path: "/",
+      element: "main",
     }
   );
 }
