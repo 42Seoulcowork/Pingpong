@@ -1,14 +1,12 @@
-import { router } from "../utils/Router";
-
 export default class Component {
   target;
-  store;
+  props;
   state;
 
-  constructor(target, rootStore) {
+  constructor(target, props) {
     try {
       this.target = target;
-      this.store = rootStore;
+      this.props = props;
       this.state = {};
       this.setup();
       this.mount();

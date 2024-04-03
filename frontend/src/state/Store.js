@@ -1,70 +1,77 @@
-import reducer from "./reducer.js";
+let store = {
+  location: "/", // or "/game" or "/login"
+  isLoggedIn: false,
+  intraID: "Defalut_ID",
+  numberOfWins: 0,
+  numberOfLoses: 0,
+  languageId: "ko",
 
-export default class Store {
-  obj = {};
+  // Game Option
+  nickname: "Default_Nickname",
+  gameMode: "local", // or "remote" or "tournament"
+  difficulty: "easy", // or "hard"
+  appearance: "light", // or "dark"
+  ballColor: "red", // or "yellow" or "purple"
 
-  constructor() {
-    this.obj = {
-      location: "/", // or "/game" or "/login"
-      isLoggedIn: false,
-      intraID: "Defalut_ID",
-      nickname: "Default_Nickname",
-      numberOfWins: 0,
-      numberOfLoses: 0,
-      languageId: "ko",
+  // 공통 게임 정보: 게임이 종료되었을 때 업데이트
+  endReason: "normal", // or "opponentLeft" or "userLeft"
+  winner: null, // 최근 라운드 우승자의 nickname
 
-      // Game Option
-      gameMode: "local", // or "remote" or "tournament"
+  // 공통 게임 정보: 게임이 시작되거나 종료되었을 때 업데이트
+  gameStatus: "ended", // or "playing"
+  gameContext: {
+    roomName: "",
+    leftUser: "-", // nickname
+    rightUser: "-", // nickname
+    participated: false, // 본인 참석 여부
+    userSide: "left", // 본인의 side
+  },
 
-      // 공통 게임 정보: 게임이 종료되었을 때 업데이트
-      endReason: "normal", // or "opponentLeft" or "userLeft"
-      winner: null, // 최근 라운드 우승자의 nickname
+  // 공통 게임 정보: 게임 도중 실시간으로 업데이트
+  leftUserScore: 0,
+  rightUserScore: 0,
+  ballPosition: { x: 0, y: 0 },
+  ballVelocity: { x: 0, y: 0 },
+  leftPaddlePosition: 200,
+  rightPaddlePosition: 200,
 
-      // 공통 게임 정보: 게임이 시작되거나 종료되었을 때 업데이트
-      gameStatus: "ended", // or "playing"
-      gameContext: {
-        roomName: "",
-        leftUser: "-", // nickname
-        rightUser: "-", // nickname
-        participated: false, // 본인 참석 여부
-        userSide: "left", // 본인의 side
-      },
+  // tournament 정보
+  round: 0,
+  tournamentPlayer: ["", "", "", ""], // [player1_nickname, player2_nickname, player3_nickname, player4_nickname]
+  tournamentScore: {
+    round1: ["-", "-"], // [leftScore, rightScore]
+    round2: ["-", "-"],
+    round3: ["-", "-"],
+  },
 
-      // 공통 게임 정보: 게임 도중 실시간으로 업데이트
-      leftUserScore: 0,
-      rightUserScore: 0,
-      ballPosition: { x: 0, y: 0 },
-      ballVelocity: { x: 0, y: 0 },
-      leftPaddlePosition: 200,
-      rightPaddlePosition: 200,
+  tournamentWinner: {
+    round1: "-", // nickname
+    round2: "-",
+    round3: "-",
+  },
+};
 
-      // tournament 정보
-      round: 0,
-      tournamentPlayer: ["", "", "", ""], // [player1_nickname, player2_nickname, player3_nickname, player4_nickname]
-      tournamentScore: {
-        round1: ["-", "-"], // [leftScore, rightScore]
-        round2: ["-", "-"],
-        round3: ["-", "-"],
-      },
+function reducer(store, action, newState) {
+  let newStore = Object.assign({}, store);
 
-      tournamentWinner: {
-        round1: "-", // nickname
-        round2: "-",
-        round3: "-",
-      },
-    };
+  // just single depth action is allowed for now
+  if (action in store) {
+    newStore[action] = newState;
+    return newStore;
+  } else {
+    console.log("Invalid action");
+    return "";
   }
+}
 
-  dispatch(action, newState) {
-    const newObj = reducer(this.obj, action, newState);
+export function dispatch(action, newState) {
+  const newObj = reducer(store, action, newState);
 
-    if (newObj !== "") {
-      this.obj = newObj;
-    }
+  if (newObj !== "") {
+    store = newObj;
   }
+}
 
-  getState() {
-    const state = this.obj;
-    return state;
-  }
+export function getState() {
+  return store;
 }
