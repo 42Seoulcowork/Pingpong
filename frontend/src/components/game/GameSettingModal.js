@@ -1,10 +1,11 @@
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
+import { dispatch, getState } from "../../state/store.js";
 import { gameSettingCard } from "../../utils/languagePack.js";
 
 export default class GameSettingModal extends Component {
   template() {
-    const languageId = this.store.getState().languageId;
+    const languageId = getState().languageId;
 
     return `
     <div class="modal fade" id="gameSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="gameSettingModalLabel" aria-hidden="true">
@@ -94,8 +95,15 @@ export default class GameSettingModal extends Component {
   }
 
   setEvent() {
-    this.addEvent("submit", "#gameSettingForm", () => {
-      console.log("submit");
+    const form = this.target.querySelector("#gameSettingForm");
+
+    this.addEvent("submit", "#gameSettingForm", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      formData.forEach((value, key) => dispatch(key, value));
+
+      router.push("/game");
     });
   }
 }
