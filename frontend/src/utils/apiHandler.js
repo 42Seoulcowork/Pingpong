@@ -1,4 +1,4 @@
-export const sessionAuthentication = (trueCallback, falseCallback) => {
+export const sessionAuthentication = async (trueCallback, falseCallback) => {
   fetch("/api/session", {
     method: "GET",
     headers: {

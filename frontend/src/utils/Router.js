@@ -3,13 +3,13 @@ import { customEventEmitter } from "./helpers.js";
 
 class Router {
   $app;
-  rootStore;
+  state;
   routes = {};
   fallback = "/";
 
-  constructor({ $app, routes, $store, fallback = "/" }) {
+  constructor({ $app, routes, $state, fallback = "/" }) {
     this.$app = $app;
-    this.rootStore = $store;
+    this.state = $state;
     this.fallback = fallback;
 
     routes.forEach((route) => {
@@ -38,8 +38,10 @@ class Router {
   }
 
   onRoutePopHandler(event) {
-    const path = window.location.pathname;
-    this.renderPage(path, "app");
+    const path = event.state.path;
+    const element = event.state.element;
+
+    this.renderPage(path, element);
   }
 
   hasRoute(path) {
@@ -61,6 +63,7 @@ class Router {
     } else if (regex.test(path)) {
       // 주소가 없는 경우를 동적 라우팅으로 간주하고 이를 :id 로 치환
       route = this.getRoute(path.replace(regex, ":id"));
+      if (route === undefined) route = this.getRoute(this.fallback);
     } else {
       // 그 외 입력되지 않은 모든 주소에 대해서는 fallback 실행
       route = this.getRoute(this.fallback);
@@ -70,7 +73,7 @@ class Router {
     if (!$element) $element = this.$app.querySelector("#main");
 
     // route는 Component 인스턴스, 따라서 생성자에 target과 props를 전달
-    new route($element, this.rootStore);
+    new route($element, this.state);
   }
 
   push(path, element = "main") {
@@ -94,7 +97,7 @@ export function initRouter(options) {
   customEventEmitter(
     "moveRoutes",
     history.state ?? {
-      path: "/",
+      path: window.location.pathname,
       element: "main",
     }
   );

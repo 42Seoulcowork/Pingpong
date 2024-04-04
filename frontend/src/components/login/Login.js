@@ -1,17 +1,25 @@
 import Component from "../Component.js";
+import Header from "../header/Header.js";
 import { router } from "../../utils/Router.js";
 import { loginButton } from "../../utils/languagePack.js";
+import { getState } from "../../state/store.js";
 import Logo from "../../../public/42_logo.svg";
 
 export default class Login extends Component {
-  didMount() {}
+  didMount() {
+    const headerFlag = document.getElementById("header").childElementCount;
+    if (headerFlag === 0) {
+      const $header = document.getElementById("header");
+      new Header($header, this.state);
+    }
+  }
 
   template() {
-    const languageId = this.store.getState().languageId;
+    const languageId = getState().languageId;
     const OAuth_URL =
       "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b8ee714debb1a7c3febef1c78bc4eacb56043624455068279b88fe88c991c42e&redirect_uri=https%3A%2F%2F127.0.0.1%2Fapi%2Foauth&response_type=code";
 
-    let loginStatus = this.store.getState().isLoggedIn;
+    const loginStatus = getState().isLoggedIn;
     if (loginStatus === true) {
       router.push("/");
       throw "PassThrough";

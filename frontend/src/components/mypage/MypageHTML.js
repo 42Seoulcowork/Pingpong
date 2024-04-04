@@ -1,12 +1,13 @@
 import Component from "../Component.js";
 import { mypageCard } from "../../utils/languagePack.js";
+import { getState } from "../../state/store.js";
 
 export default class MypageHTML extends Component {
   template() {
-    const languageId = this.store.getState().languageId;
-    const intraID = this.store.getState().intraID;
-    const numberOfWins = this.store.getState().numberOfWins;
-    const numberOfLoses = this.store.getState().numberOfLoses;
+    const languageId = getState().languageId;
+    const intraID = getState().intraID;
+    const numberOfWins = getState().numberOfWins;
+    const numberOfLoses = getState().numberOfLoses;
     const numberOfPlays = numberOfWins + numberOfLoses;
 
     return `

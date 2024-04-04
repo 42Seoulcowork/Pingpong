@@ -1,18 +1,26 @@
 import Component from "../Component.js";
+import Header from "../header/Header.js";
 import { languageSelector } from "../../utils/languagePack.js";
-import { setLanguage } from "../../utils/cookieHandler.js";
-import { headerLanguageChanger } from "../header/headerHandler.js";
-import { router } from "../../utils/Router.js";
+import { getState } from "../../state/store.js";
+import { languageChanger } from "./languageHandler.js";
 
 export default class Language extends Component {
+  didMount() {
+    const headerFlag = document.getElementById("header").childElementCount;
+    if (headerFlag === 0) {
+      const $header = document.getElementById("header");
+      new Header($header, this.state);
+    }
+  }
+
   template() {
-    const languageId = this.store.getState().languageId;
+    const languageId = getState().languageId;
 
     return `
     <div class='d-flex flex-column align-items-center justify-content-center' style="height: 100vh;">
       <div class='language-page'>
-        <div class="language-selector text-center">
-          <h2 class="mb-4 fs-1 nanum-gothic-bold">${languageSelector[languageId].selectLanguage}</h2>
+        <div class="text-center">
+          <h2 class="mb-4 fs-1 nanum-gothic-bold" id="language-selector">${languageSelector[languageId].selectLanguage}</h2>
             <div class="d-grid gap-2 d-md-block" role="group">
                 <button type="button" class="btn btn-outline-info fs-4 m-1 btn-lg" id="englishButton">English</button>
                 <button type="button" class="btn btn-outline-warning fs-4 m-1 btn-lg" id="koreanButton">한국어</button>
@@ -26,19 +34,13 @@ export default class Language extends Component {
 
   setEvent() {
     this.addEvent("click", "#englishButton", () => {
-      setLanguage("languageId", "en", 3, this.store);
-      headerLanguageChanger("en");
-      router.push("/language");
+      languageChanger("en");
     });
     this.addEvent("click", "#koreanButton", () => {
-      setLanguage("languageId", "ko", 3, this.store);
-      headerLanguageChanger("ko");
-      router.push("/language");
+      languageChanger("ko");
     });
     this.addEvent("click", "#frenchButton", () => {
-      setLanguage("languageId", "fr", 3, this.store);
-      headerLanguageChanger("fr");
-      router.push("/language");
+      languageChanger("fr");
     });
   }
 }
