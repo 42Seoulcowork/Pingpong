@@ -7,6 +7,11 @@ let allowedKeys;
 let gameWaitingModal;
 let gameOverModal;
 
+const scoreHandler = (p1, p2) => {
+  document.getElementById("player1score").innerText = p1;
+  document.getElementById("player2score").innerText = p2;
+};
+
 export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
 
@@ -47,6 +52,8 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
     ball.position.fromArray(data.ball);
     p1.position.fromArray(data.p1);
     p2.position.fromArray(data.p2);
+
+    scoreHandler(data.score[0], data.score[1]);
 
     console.log("Received data:", data);
   };
