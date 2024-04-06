@@ -1,8 +1,8 @@
 import Component from "../Component.js";
 import logoutRestrictionModal from "./logoutRestrictionModal.js";
-import { logoutButtonHandler } from "./headerHandler.js";
 import { router } from "../../utils/Router.js";
 import { logout } from "../../utils/apiHandler.js";
+import { dispatch, getState } from "../../state/store.js";
 import {
   mypageButton,
   languageSelector,
@@ -11,11 +11,15 @@ import {
 
 export default class Header extends Component {
   didMount() {
-    logoutButtonHandler(this.store);
+    const loginStatus = getState().isLoggedIn;
+    if (loginStatus === true) {
+      const logoutHeader = document.querySelector("#logoutHeader");
+      logoutHeader.hidden = false;
+    }
   }
 
   template() {
-    const languageId = this.store.getState().languageId;
+    const languageId = getState().languageId;
 
     return `
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -56,15 +60,18 @@ export default class Header extends Component {
     this.addEvent("click", "#logoutHeader", () => {
       logout(
         () => {
-          this.store.dispatch("isLoggedIn", false);
-          logoutButtonHandler(this.store);
+          dispatch("isLoggedIn", false);
+
+          const logoutHeader = document.querySelector("#logoutHeader");
+          logoutHeader.hidden = true;
+
           router.push("/login");
         },
         () => {
           const $logoutRestrictionModal = this.target.querySelector(
             "#logoutRestrictionModal"
           );
-          new logoutRestrictionModal($logoutRestrictionModal, this.store);
+          new logoutRestrictionModal($logoutRestrictionModal, this.state);
 
           const modal = new bootstrap.Modal("#logoutRestrictionModal");
           modal.show();

@@ -1,29 +1,36 @@
 import Component from "../Component.js";
+import Header from "../header/Header.js";
 import MypageHTML from "./MypageHTML.js";
 import mypageRestrictionModal from "./mypageRestrictionModal.js";
 import { getProfileInfo } from "../../utils/apiHandler.js";
+import { dispatch, getState } from "../../state/store.js";
 import * as bootstrap from "bootstrap";
 
 export default class Mypage extends Component {
   didMount() {
-    const loginStatus = this.store.getState().isLoggedIn;
+    const headerFlag = document.getElementById("header").childElementCount;
+    if (headerFlag === 0) {
+      const $header = document.getElementById("header");
+      new Header($header, this.state);
+    }
 
+    const loginStatus = getState().isLoggedIn;
     if (loginStatus === true) {
       getProfileInfo(
         (response) => {
-          this.store.dispatch("intraID", response.intra_id);
-          this.store.dispatch("numberOfWins", response.win);
-          this.store.dispatch("numberOfLoses", response.lose);
+          dispatch("intraID", response.intra_id);
+          dispatch("numberOfWins", response.win);
+          dispatch("numberOfLoses", response.lose);
 
           const $mypage = this.target.querySelector("#mypage");
-          new MypageHTML($mypage, this.store);
+          new MypageHTML($mypage, this.state);
         },
         () => {
           console.log("Failed to get profile info");
           const $mypageModal = this.target.querySelector(
             "#mypageRestrictionWrapper"
           );
-          new mypageRestrictionModal($mypageModal, this.store);
+          new mypageRestrictionModal($mypageModal, this.state);
 
           const modal = new bootstrap.Modal("#mypageRestrictionModal");
           modal.show();
@@ -33,7 +40,7 @@ export default class Mypage extends Component {
       const $mypageModal = this.target.querySelector(
         "#mypageRestrictionWrapper"
       );
-      new mypageRestrictionModal($mypageModal, this.store);
+      new mypageRestrictionModal($mypageModal, this.state);
 
       const modal = new bootstrap.Modal("#mypageRestrictionModal");
       modal.show();

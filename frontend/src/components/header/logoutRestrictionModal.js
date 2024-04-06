@@ -1,9 +1,10 @@
 import Component from "../Component.js";
 import { logoutButton } from "../../utils/languagePack.js";
+import { getState } from "../../state/store.js";
 
 export default class logoutRestrictionModal extends Component {
   template() {
-    const languageId = this.store.getState().languageId;
+    const languageId = getState().languageId;
 
     return `
     <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mypageModalLabel" aria-hidden="true">

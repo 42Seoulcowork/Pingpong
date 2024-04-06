@@ -24,9 +24,3 @@ export const setCookie = (name, value, daysToExpire) => {
     "; path=/";
   document.cookie = cookieValue;
 };
-
-export const setLanguage = (name, value, daysToExpire, store) => {
-  store.dispatch("languageId", value);
-  setCookie(name, value, daysToExpire);
-  document.documentElement.lang = value;
-};

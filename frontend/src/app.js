@@ -1,10 +1,11 @@
 import { initRouter } from "./utils/Router.js";
-import Store from "./state/Store.js";
+import { sessionAuthentication } from "./utils/apiHandler.js";
+import { getCookie } from "./utils/cookieHandler.js";
+import { dispatch } from "./state/store.js";
 import Main from "./components/main/Main.js";
 import Login from "./components/login/Login.js";
 import Language from "./components/language/Language.js";
 import Mypage from "./components/mypage/Mypage.js";
-import Component from "./components/Component.js";
 import "./scss/style.scss";
 
 const routes = [
@@ -27,6 +28,21 @@ $header.id = "header";
 $main.id = "main";
 $footer.id = "footer";
 
-const $store = new Store();
+const languageId = getCookie("languageId");
+if (languageId) {
+  dispatch("languageId", languageId);
+  document.documentElement.lang = languageId;
+}
 
-initRouter({ $app, routes, $store });
+const $state = {};
+
+sessionAuthentication(
+  () => {
+    dispatch("isLoggedIn", true);
+    initRouter({ $app, routes, $state });
+  },
+  () => {
+    dispatch("isLoggedIn", false);
+    initRouter({ $app, routes, $state });
+  }
+);
