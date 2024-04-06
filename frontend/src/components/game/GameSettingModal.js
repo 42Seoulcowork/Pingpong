@@ -46,15 +46,15 @@ export default class GameSettingModal extends Component {
                 <label class="form-label">${gameSettingCard[languageId].appearance}</label>
                 <div class="row">
                   <div class="form-check col mx-3">
-                    <input class="form-check-input" type="radio" name="appearance" value="light" id="lightMode" checked>
-                    <label class="form-check-label" for="lightMode">
-                      ${gameSettingCard[languageId].lightMode}
+                    <input class="form-check-input" type="radio" name="appearance" value="day" id="dayMode" checked>
+                    <label class="form-check-label" for="dayMode">
+                      ${gameSettingCard[languageId].dayMode}
                     </label>
                   </div>
                   <div class="form-check col mx-3">
-                    <input class="form-check-input" type="radio" name="appearance" value="dark" id="darkMode">
-                    <label class="form-check-label" for="hardMode">
-                      ${gameSettingCard[languageId].darkMode}
+                    <input class="form-check-input" type="radio" name="appearance" value="night" id="nightMode">
+                    <label class="form-check-label" for="nightMode">
+                      ${gameSettingCard[languageId].nightMode}
                     </label>
                   </div>
                 </div>
