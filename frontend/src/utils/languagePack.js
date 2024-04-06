@@ -180,6 +180,9 @@ export const gameSettingCard = {
     purple: "Purple",
     close: "Close",
     start: "Start",
+    unprepared: "Please start in the normal way.",
+    confirm: "Confirm",
+    specialCharacter: "Special characters cannot be used.",
   },
   ko: {
     setting: "PINGPONG 설정",
@@ -196,6 +199,9 @@ export const gameSettingCard = {
     purple: "보라",
     close: "닫기",
     start: "시작",
+    unprepared: "정상적인 방법으로 시작해주세요.",
+    confirm: "확인",
+    specialCharacter: "특수문자는 사용할 수 없습니다.",
   },
   fr: {
     setting: "Réglage de PINGPONG",
@@ -212,62 +218,65 @@ export const gameSettingCard = {
     purple: "Violet",
     close: "Fermer",
     start: "Démarrer",
+    unprepared: "Veuillez démarrer de manière normale.",
+    confirm: "Confirmer",
+    specialCharacter: "Les caractères spéciaux ne peuvent pas être utilisés.",
   },
 };
 
-export const opponentWaitingModal = {
+export const gameBoard = {
+  en: {
+    score: "Score",
+    player1: "Player 1",
+    player2: "Player 2",
+  },
+  ko: {
+    score: "점수",
+    player1: "플레이어 1",
+    player2: "플레이어 2",
+  },
+  fr: {
+    score: "Score",
+    player1: "Joueur 1",
+    player2: "Joueur 2",
+  },
+};
+
+export const gameWaitingModal = {
   en: {
     waiting: "Waiting",
-    description: "Waiting another player",
+    description: "Waiting for game creation or other players.",
     cancel: "Cancel",
   },
   ko: {
     waiting: "대기중",
-    description: "상대방을 기다리는 중입니다",
+    description: "게임 생성 또는 다른 플레이어를 기다리고 있습니다.",
     cancel: "취소",
   },
   fr: {
     waiting: "En attente",
-    description: "En attente d'un autre joueur",
+    description: "En attente de la création du jeu ou d'autres joueurs.",
     cancel: "Annuler",
   },
 };
 
-export const invalidNicknameModal = {
-  en: {
-    title: "Invalid Nickname",
-    description: "Please try another nickname",
-    ok: "Ok",
-  },
-  ko: {
-    title: "유효하지 않은 닉네임",
-    description: "다른 닉네임을 입력해주세요",
-    ok: "확인",
-  },
-  fr: {
-    title: "Pseudo invalide",
-    description: "Veuillez essayer un autre pseudo",
-    ok: "Ok",
-  },
-};
-
-export const gameOverModal = {
+export const gameOver = {
   en: {
     gameOver: "Game Over!",
-    normalEnd: "The Winner is",
-    abnormalEnd: "Someone left the game!",
+    normal: "The Winner is ",
+    left: "Someone left the game!",
     closeButton: "Close",
   },
   ko: {
     gameOver: "게임 종료",
-    normalEnd: "승자는",
-    abnormalEnd: "상대방이 나갔습니다!",
+    normal: "승자는 ",
+    left: "상대방이 나갔습니다!",
     closeButton: "닫기",
   },
   fr: {
     gameOver: "Fin du jeu!",
-    normalEnd: "Le gagnant est",
-    abnormalEnd: "Quelqu'un a quitté le jeu!",
+    normal: "Le gagnant est ",
+    left: "Quelqu'un a quitté le jeu!",
     closeButton: "Fermer",
   },
 };
