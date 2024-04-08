@@ -2,7 +2,7 @@ import { dispatch, getState } from "../../state/store.js";
 import { gameOver } from "../../utils/languagePack.js";
 import * as bootstrap from "bootstrap";
 
-let socket;
+export let socket;
 let allowedKeys;
 let gameWaitingModal;
 let gameOverModal;
@@ -15,7 +15,7 @@ const scoreHandler = (p1, p2) => {
 export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
 
-  const webSocketURL = "wss://127.0.0.1/ws/" + getState().gameMode;
+  const webSocketURL = "wss://127.0.0.1/ws/" + getState().gameMode + "/";
   socket = new WebSocket(webSocketURL);
   // socket = new WebSocket("wss://echo.websocket.org");
 
@@ -79,7 +79,6 @@ const keyEventHandler = (gameMode) => {
   }
 
   document.addEventListener("keydown", (event) => {
-    event.preventDefault();
     const keydown = event.key;
     if (keydown in allowedKeys && allowedKeys[keydown] == false) {
       const message = { [keydown]: true };
@@ -96,7 +95,16 @@ const keyEventHandler = (gameMode) => {
       allowedKeys[keyup] = false;
     }
   });
+
+  window.addEventListener("popstate", closeSocket);
 };
+
+function closeSocket() {
+    if (socket && socket.readyState <= 1) {
+        socket.close();
+        window.removeEventListener("popstate", closeSocket);
+    }
+}
 
 export const gameWaitingModalWork = () => {
   gameWaitingModal = new bootstrap.Modal("#gameWaitingModal");
