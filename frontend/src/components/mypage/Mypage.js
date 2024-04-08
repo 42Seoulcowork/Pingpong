@@ -1,7 +1,7 @@
 import Component from "../Component.js";
 import Header from "../header/Header.js";
 import MypageHTML from "./MypageHTML.js";
-import mypageRestrictionModal from "./mypageRestrictionModal.js";
+import MypageRestrictionModal from "./MypageRestrictionModal.js";
 import { getProfileInfo } from "../../utils/apiHandler.js";
 import { dispatch, getState } from "../../state/store.js";
 import * as bootstrap from "bootstrap";
@@ -27,20 +27,16 @@ export default class Mypage extends Component {
         },
         () => {
           console.log("Failed to get profile info");
-          const $mypageModal = this.target.querySelector(
-            "#mypageRestrictionWrapper"
-          );
-          new mypageRestrictionModal($mypageModal, this.state);
+          const $mypageModal = this.target.querySelector("#mypageRestriction");
+          new MypageRestrictionModal($mypageModal, this.state);
 
           const modal = new bootstrap.Modal("#mypageRestrictionModal");
           modal.show();
         }
       );
     } else {
-      const $mypageModal = this.target.querySelector(
-        "#mypageRestrictionWrapper"
-      );
-      new mypageRestrictionModal($mypageModal, this.state);
+      const $mypageModal = this.target.querySelector("#mypageRestriction");
+      new MypageRestrictionModal($mypageModal, this.state);
 
       const modal = new bootstrap.Modal("#mypageRestrictionModal");
       modal.show();
@@ -50,7 +46,7 @@ export default class Mypage extends Component {
   template() {
     return `
     <div id="mypage"></div>
-    <div id="mypageRestrictionWrapper"></div>
+    <div id="mypageRestriction"></div>
     `;
   }
 }

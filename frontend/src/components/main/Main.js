@@ -113,12 +113,15 @@ export default class Main extends Component {
   setEvent() {
     this.addEvent("click", "#localGameChoiceButton", () => {
       dispatch("gameMode", "local");
+      dispatch("newGame", true);
     });
     this.addEvent("click", "#remoteGameChoiceButton", () => {
       dispatch("gameMode", "remote");
+      dispatch("newGame", true);
     });
     this.addEvent("click", "#tournamentGameChoiceButton", () => {
       dispatch("gameMode", "tournament");
+      dispatch("newGame", true);
     });
   }
 }
