@@ -10,11 +10,12 @@ let store = {
   nickname: "Default_Nickname",
   gameMode: "local", // or "remote" or "tournament"
   difficulty: "easy", // or "hard"
-  appearance: "light", // or "dark"
+  appearance: "day", // or "night"
   ballColor: "red", // or "yellow" or "purple"
+  newGame: false, // or true
 
   // 공통 게임 정보: 게임이 종료되었을 때 업데이트
-  endReason: "normal", // or "opponentLeft" or "userLeft"
+  endReason: "normal", // or "left"
   winner: null, // 최근 라운드 우승자의 nickname
 
   // 공통 게임 정보: 게임이 시작되거나 종료되었을 때 업데이트

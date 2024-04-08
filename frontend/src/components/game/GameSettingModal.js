@@ -2,13 +2,14 @@ import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
 import { dispatch, getState } from "../../state/store.js";
 import { gameSettingCard } from "../../utils/languagePack.js";
+import * as bootstrap from "bootstrap";
 
 export default class GameSettingModal extends Component {
   template() {
     const languageId = getState().languageId;
 
     return `
-    <div class="modal fade" id="gameSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="gameSettingModalLabel" aria-hidden="true">
+    <div class="modal fade" id="gameSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -46,15 +47,15 @@ export default class GameSettingModal extends Component {
                 <label class="form-label">${gameSettingCard[languageId].appearance}</label>
                 <div class="row">
                   <div class="form-check col mx-3">
-                    <input class="form-check-input" type="radio" name="appearance" value="light" id="lightMode" checked>
-                    <label class="form-check-label" for="lightMode">
-                      ${gameSettingCard[languageId].lightMode}
+                    <input class="form-check-input" type="radio" name="appearance" value="day" id="dayMode" checked>
+                    <label class="form-check-label" for="dayMode">
+                      ${gameSettingCard[languageId].dayMode}
                     </label>
                   </div>
                   <div class="form-check col mx-3">
-                    <input class="form-check-input" type="radio" name="appearance" value="dark" id="darkMode">
-                    <label class="form-check-label" for="hardMode">
-                      ${gameSettingCard[languageId].darkMode}
+                    <input class="form-check-input" type="radio" name="appearance" value="night" id="nightMode">
+                    <label class="form-check-label" for="nightMode">
+                      ${gameSettingCard[languageId].nightMode}
                     </label>
                   </div>
                 </div>
@@ -84,10 +85,22 @@ export default class GameSettingModal extends Component {
               </div>        
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-outline-info px-4" id="gamebutton">${gameSettingCard[languageId].start}</button>
+              <button type="submit" class="btn btn-outline-info px-4" data-bs-dismiss="modal" id="gamebutton">${gameSettingCard[languageId].start}</button>
               <button type="button" class="btn btn-outline-warning px-4" data-bs-dismiss="modal">${gameSettingCard[languageId].close}</button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="specialCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-3 p-3 nanum-gothic-bold">${gameSettingCard[languageId].specialCharacter}</h1>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal">${gameSettingCard[languageId].confirm}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -101,6 +114,15 @@ export default class GameSettingModal extends Component {
       event.preventDefault();
 
       const formData = new FormData(form);
+
+      const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+      if (regExp.test(formData.get("nickname"))) {
+        const $special = document.getElementById("specialCharacterModal");
+        const modal = new bootstrap.Modal($special);
+        modal.show();
+        return;
+      }
+
       formData.forEach((value, key) => dispatch(key, value));
 
       router.push("/game");

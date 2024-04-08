@@ -6,6 +6,7 @@ import Main from "./components/main/Main.js";
 import Login from "./components/login/Login.js";
 import Language from "./components/language/Language.js";
 import Mypage from "./components/mypage/Mypage.js";
+import Game from "./components/game/Game.js";
 import "./scss/style.scss";
 
 const routes = [
@@ -13,6 +14,7 @@ const routes = [
   { path: "/login", page: Login },
   { path: "/language", page: Language },
   { path: "/mypage", page: Mypage },
+  { path: "/game", page: Game },
 ];
 
 const $app = document.querySelector("#app");
