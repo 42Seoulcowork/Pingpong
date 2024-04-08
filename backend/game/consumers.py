@@ -1,19 +1,24 @@
-import json
-from channels.generic.websocket import AsyncWebsocketConsumer
+import asyncio
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
-class GameConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         await self.accept()
 
     async def disconnect(self, close_code):
-        pass
+        self.connected = False
 
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        name = text_data_json["name"]
+    async def receive_json(self, content, **kwargs):
+        self.connected = True
+        asyncio.ensure_future(self.send_periodic_message())
 
-        data = {
-            "name": name,
-            "greeting": "Hello, " + name + "!"
-        }
-        await self.send(text_data=json.dumps(data))
+    async def send_periodic_message(self):
+        while self.connected:
+            message = {
+                'ball' : [0, 5, 0],
+                'p1' : [-13, 1, 0],
+                'p2' : [13, 1, 0],
+                'score' : [1, 2]
+            }
+            await self.send_json(message)
+            await asyncio.sleep(1)

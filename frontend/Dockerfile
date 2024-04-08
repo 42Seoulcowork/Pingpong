@@ -25,8 +25,6 @@ RUN npm install && npm run build
 
 RUN mv /app/dist/* /var/www/
 
-# RUN mv /app/* /var/www/
-
 EXPOSE 443 80
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "nginx", "-g", "daemon off;"]

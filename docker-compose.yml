@@ -10,9 +10,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - type: bind
-        source: ./frontend/dist
-        target: /var/www
+      - front_volume:/var/www
 
   db:
     container_name: db
@@ -40,3 +38,10 @@ services:
       - type: bind
         source: ./backend
         target: /app 
+
+volumes:
+  front_volume:
+    driver_opts:
+      type: none
+      device: $PWD/frontend/dist
+      o: bind
