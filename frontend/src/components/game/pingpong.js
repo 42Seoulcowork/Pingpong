@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
-import { socketHandler, eventHandler } from "./gameEventHandler.js";
+import { socketHandler } from "./gameEventHandler.js";
 
 const paddle = (position_x, position_z, color) => {
   const geometry = new THREE.BoxGeometry(1.5, 1.5, 5);

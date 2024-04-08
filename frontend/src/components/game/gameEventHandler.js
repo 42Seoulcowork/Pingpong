@@ -2,7 +2,7 @@ import { dispatch, getState } from "../../state/store.js";
 import { gameOver } from "../../utils/languagePack.js";
 import * as bootstrap from "bootstrap";
 
-export let socket;
+let socket;
 let allowedKeys;
 let gameWaitingModal;
 let gameOverModal;
