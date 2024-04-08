@@ -17,6 +17,7 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
 
   const webSocketURL = "wss://127.0.0.1/ws/" + getState().gameMode + "/";
   socket = new WebSocket(webSocketURL);
+  window.addEventListener("popstate", closeSocket);
   // socket = new WebSocket("wss://echo.websocket.org");
 
   socket.onopen = () => {
@@ -95,8 +96,6 @@ const keyEventHandler = (gameMode) => {
       allowedKeys[keyup] = false;
     }
   });
-
-  window.addEventListener("popstate", closeSocket);
 };
 
 function closeSocket() {
