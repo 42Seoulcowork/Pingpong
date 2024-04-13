@@ -1,6 +1,7 @@
 import { dispatch, getState } from "../../state/store.js";
 import { gameOver } from "../../utils/languagePack.js";
 import * as bootstrap from "bootstrap";
+import { SERVER_URL } from "../../utils/constants.js";
 
 let socket;
 let allowedKeys;
@@ -15,7 +16,7 @@ const scoreHandler = (p1, p2) => {
 export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
 
-  const webSocketURL = "wss://127.0.0.1/ws/" + getState().gameMode + "/";
+  const webSocketURL = "wss://"+ SERVER_URL + "/ws/" + getState().gameMode + "/";
   socket = new WebSocket(webSocketURL);
   window.addEventListener("popstate", closeSocket);
   // socket = new WebSocket("wss://echo.websocket.org");
