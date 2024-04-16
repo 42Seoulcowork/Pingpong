@@ -19,8 +19,8 @@ export const sessionAuthentication = async (trueCallback, falseCallback) => {
 };
 
 export const logout = async (trueCallback, falseCallback) => {
-  fetch("/api/session", {
-    method: "DELETE",
+  fetch("/api/logout/", {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
