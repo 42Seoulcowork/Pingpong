@@ -5,16 +5,20 @@ class Player:
             x = -13
         else:
             x = 13
-        self.position = [x, 1, 0]
+        self.pos = [x, 1, 0]
     
     def __str__(self):
         return self.id
     
     def move_up(self):
-        self.position[1] += 1
+        if self.pos[2] >= 13:
+            return
+        self.pos[2] += 1
 
     def move_down(self):
-        self.position[1] -= 1
+        if self.pos[2] <= -13:
+            return
+        self.pos[2] -= 1
 
-    def get_position(self):
-        return self.position
+    def info(self):
+        return self.pos

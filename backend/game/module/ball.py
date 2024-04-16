@@ -1,15 +1,15 @@
 class Ball:
-    def __init__(self, x, y, radius, color, speed, direction):
-        self.x = x
-        self.y = y
-        self.radius = radius
-        self.color = color
+    def __init__(self, pos, speed, dir):
+        self.pos = pos
         self.speed = speed
-        self.direction = direction
+        self.dir = dir
 
     def move(self):
-        self.x += self.speed * self.direction[0]
-        self.y += self.speed * self.direction[1]
+        self.pos[0] += self.speed * self.dir[0]
+        self.pos[2] += self.speed * self.dir[1]
+
+    def info(self):
+        return self.pos
 
     # def bounce(self, axis):
     #     self.direction[axis] *= -1

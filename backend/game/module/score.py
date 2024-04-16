@@ -10,3 +10,6 @@ class Score:
             self.score[0] += 1
         else:
             self.score[1] += 1
+
+    def info(self):
+        return self.score
