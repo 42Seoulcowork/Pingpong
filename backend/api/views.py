@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth import login, logout
 from .models import User
 from .serializers import UserSerializer
 from config.settings import API_URL, UID, OAUTH_SECRET, REDIRECT_URI, FRONT_URL
@@ -10,17 +11,21 @@ import requests
 # 개발용 테스트 계정 생성
 class TestAPI(APIView):
     def get(self, request):
-        test_user = User.objects.filter(intra_id='test')
-        if not test_user:
+        if request.user.is_authenticated:
+            return redirect(FRONT_URL)
+        try:
+            test_user = User.objects.get(intra_id='test')
+        except User.DoesNotExist:
             test_user = User(intra_id='test')
             test_user.save()
-        request.session['intra_id'] = 'test'
+        login(request, test_user)
         return redirect(FRONT_URL)
 
 class OauthAPI(APIView):
     def get(self, request):
         intra_id = self.__get_intra_id(request)
-        request.session['intra_id'] = intra_id
+        user = User.objects.get(intra_id=intra_id)
+        login(request, user)
         return redirect(FRONT_URL)
     
     def __get_intra_id(self, request):
@@ -51,30 +56,15 @@ class OauthAPI(APIView):
         data = response.json()
         return data.get('access_token')
 
-class UsersAPI(APIView):
-    def get(self, request):
-        intra_id = request.session.get('intra_id')
-        if intra_id is None:
-            return Response(
-                {
-                    "message": "로그인이 필요합니다."
-                }
-                , status=status.HTTP_401_UNAUTHORIZED
-                )
-        user = User.objects.all()
-        serializer = UserSerializer(user, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class MeAPI(APIView):
     def get(self, request):
-        intra_id = request.session.get('intra_id')
-        if intra_id is None:
+        if request.user.is_authenticated is False:
             return Response(
                 {
                     "message": "로그인이 필요합니다."
                 }
                 , status=status.HTTP_401_UNAUTHORIZED)
+        intra_id = request.user.intra_id
         user = User.objects.get(intra_id=intra_id)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -94,8 +84,10 @@ class SessionAPI(APIView):
             }
             , status=status.HTTP_200_OK
         )
-    def delete(self, request):
-        request.session.flush()
+    
+class LogoutAPI(APIView):
+    def get(self, request):
+        logout(request)
         return Response(
             {
                 "message": "로그아웃이 완료되었습니다."
