@@ -4,6 +4,7 @@ import { router } from "../../utils/Router.js";
 import { loginButton } from "../../utils/languagePack.js";
 import { getState } from "../../state/store.js";
 import Logo from "../../../public/42_logo.svg";
+import { SERVER_URL } from "../../utils/constants.js";
 
 export default class Login extends Component {
   didMount() {
@@ -17,7 +18,7 @@ export default class Login extends Component {
   template() {
     const languageId = getState().languageId;
     const OAuth_URL =
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b8ee714debb1a7c3febef1c78bc4eacb56043624455068279b88fe88c991c42e&redirect_uri=https%3A%2F%2F127.0.0.1%2Fapi%2Foauth&response_type=code";
+      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b8ee714debb1a7c3febef1c78bc4eacb56043624455068279b88fe88c991c42e&redirect_uri=https%3A%2F%2F" + SERVER_URL + "%2Fapi%2Foauth&response_type=code";
 
     const loginStatus = getState().isLoggedIn;
     if (loginStatus === true) {
