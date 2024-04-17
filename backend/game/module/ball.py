@@ -7,6 +7,9 @@ class Ball:
     def move(self):
         self.pos[0] += self.speed * self.dir[0]
         self.pos[2] += self.speed * self.dir[1]
+        self.pos[1] = 10 - self.pos[0] ** 2 / 9
+        if self.pos[1] < 1:
+            self.pos[1] = 1 + (1 - self.pos[1]) / 3
 
     def info(self):
         return self.pos

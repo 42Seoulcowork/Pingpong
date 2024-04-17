@@ -5,11 +5,11 @@ class Score:
     def get_score(self):
         return self.score
     
-    def update_score(self, player):
-        if player == 1:
-            self.score[0] += 1
-        else:
-            self.score[1] += 1
+    def add_p1(self):
+        self.score[0] += 1
+    
+    def add_p2(self):
+        self.score[1] += 1
 
     def info(self):
         return self.score
