@@ -10,16 +10,18 @@ RUN apk update && apk upgrade && apk add gcc musl-dev libffi-dev libpq-dev dumb-
 
 RUN python -m pip install --upgrade pip
 
+COPY requirements.txt .
+RUN pip install -r requirements.txt --no-cache-dir
+
+COPY .env .env
+COPY manage.py .
+COPY ./conf.sh .
+
 COPY ./api ./api
 COPY ./config ./config
 COPY ./game ./game
-COPY .env .env
-COPY manage.py .
-COPY requirements.txt .
 
-RUN pip install -r requirements.txt --no-cache-dir
 
-COPY ./conf.sh .
 
 EXPOSE 8000
 
