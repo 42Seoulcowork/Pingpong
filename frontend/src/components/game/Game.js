@@ -57,11 +57,11 @@ export default class Game extends Component {
           <div class="card-header text-bg-dark border-dark nanum-gothic-bold text-center">${gameBoard[languageId].score}</div>
           <div class="card-body row p-2">
             <div class="col">
-              <p class="card-text fs-6 py-1 mb-2 text-center">${gameBoard[languageId].player1}</p>
+              <p class="card-text fs-6 py-1 mb-2 text-center" id="player1name">${gameBoard[languageId].player1}</p>
               <p class="card-text fs-5 text-center nanum-gothic-bold" id="player1score">0</p>
             </div>
             <div class="col">
-              <p class="card-text fs-6 py-1 mb-2 text-center">${gameBoard[languageId].player2}</p>
+              <p class="card-text fs-6 py-1 mb-2 text-center" id="player2name">${gameBoard[languageId].player2}</p>
               <p class="card-text fs-5 text-center nanum-gothic-bold" id="player2score">0</p>
             </div>
           </div>

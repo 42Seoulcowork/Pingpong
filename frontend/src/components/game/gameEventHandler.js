@@ -13,18 +13,30 @@ const scoreHandler = (p1, p2) => {
   document.getElementById("player2score").innerText = p2;
 };
 
+const nicknameHandler = (nickname1, nickname2) => {
+  document.getElementById("player1name").innerText = nickname1;
+  document.getElementById("player2name").innerText = nickname2;
+};
+
 export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
 
   const webSocketURL = "wss://"+ SERVER_URL + "/ws/" + getState().gameMode + "/";
   socket = new WebSocket(webSocketURL);
   window.addEventListener("popstate", closeSocket);
-  // socket = new WebSocket("wss://echo.websocket.org");
+  const child = document.querySelector("#gameWaitingButton");
+  child.addEventListener("click", () => {
+    socket.close();
+  });
 
   socket.onopen = () => {
     console.log("WebSocket connection opened");
     socketOpenCallback();
-    const message = { ready: true };
+    const message = {
+        ready: true,
+        nickname: getState().nickname,
+        difficulty: getState().difficulty,
+    };
     socket.send(JSON.stringify(message));
   };
 
@@ -39,6 +51,9 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
       gameWaitingModalClose();
+      if (gameMode !== "local") {
+        nicknameHandler(data.nickname[0], data.nickname[1]);
+      }
       pauseFlag = false;
     } else if (data.gameOver !== undefined) {
       dispatch("endReason", data.gameOver);
