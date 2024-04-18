@@ -4,11 +4,12 @@ class Player:
         self.move_up_state = False
         self.move_down_state = False
         self.speed = 1
+        self.score = 0
         if player == 1:
             x = -13
         else:
             x = 13
-        self.pos = [x, 2, 0]
+        self.pos = [x, 4, 0]
     
     def __str__(self):
         return self.id
@@ -29,11 +30,11 @@ class Player:
     def set_move_down(self, state):
         self.move_down_state = state
 
+    def add_score(self):
+        self.score += 1
+
     def update(self):
         if self.move_up_state:
             self.move_up()
         if self.move_down_state:
             self.move_down()
-
-    def info(self):
-        return self.pos

@@ -1,23 +1,13 @@
-from .score import Score
 from .player import Player
 from .ball import Ball
+from .enum import GAME_OVER
 
 class Game:
-    def __init__(self):
-        self.score = Score()
-        self.p1 = Player('p1', 1)
-        self.p2 = Player('p2', 2)
-        self.ball = Ball([0, 1, 0], 0.5, [1, -1])
-
-    def set_state(self, info):
-        if 'w' in info:
-            self.p1.set_move_up(info['w'])
-        if 's' in info:
-            self.p1.set_move_down(info['s'])
-        if 'ArrowUp' in info:
-            self.p2.set_move_up(info['ArrowUp'])
-        if 'ArrowDown' in info:
-            self.p2.set_move_down(info['ArrowDown'])
+    def __init__(self, p1, p2, speed=0.5):
+        self.p1 = p1
+        self.p2 = p2
+        self.ball = Ball(speed, [1, -1])
+        self.winner = None
 
     def update(self):
         self.p1.update()
@@ -26,15 +16,22 @@ class Game:
         if -13 < self.ball.pos[0] < 13:
             self.hit_paddle()
             self.hit_wall()
-        self.check_score()
+        self.update_score()
+        if self.p1.score == 5:
+            self.winner = self.p1
+            return GAME_OVER
+        if self.p2.score == 5:
+            self.winner = self.p2
+            return GAME_OVER
+        return 0
 
-    def check_score(self):
-        if self.ball.pos[0] <= -20:
-            self.score.add_p2()
-            self.ball = Ball([0, 1, 0], 0.5, [1, -1])
-        if self.ball.pos[0] >= 20:
-            self.score.add_p1()
-            self.ball = Ball([0, 1, 0], 0.5, [-1, 1])
+    def update_score(self):
+        if self.ball.pos[0] <= -24:
+            self.p2.add_score()
+            self.ball.update(0.5, [1, -1])
+        if self.ball.pos[0] >= 24:
+            self.p1.add_score()
+            self.ball.update(0.5, [-1, 1])
 
     def hit_wall(self):
         if self.ball.pos[2] <= -14 or self.ball.pos[2] >= 14:
@@ -42,16 +39,26 @@ class Game:
 
     def hit_paddle(self):
         if self.ball.pos[0] <= -11.5:
-            if self.p1.pos[2] - 2.75 <= self.ball.pos[2] <= self.p1.pos[2] + 2.75:
+            if self.p1.pos[2] - 3 <= self.ball.pos[2] <= self.p1.pos[2] + 3:
                 self.ball.dir[0] = 1
         if  self.ball.pos[0] >= 11.5:
-            if self.p2.pos[2] - 2.5 <= self.ball.pos[2] <= self.p2.pos[2] + 2.5:
+            if self.p2.pos[2] - 3 <= self.ball.pos[2] <= self.p2.pos[2] + 3:
                 self.ball.dir[0] = -1
 
     def info(self):
         return {
-            'score' : self.score.info(),
-            'p1' : self.p1.info(),
-            'p2' : self.p2.info(),
-            'ball' : self.ball.info(),
+            'p1': self.p1.pos,
+            'p2': self.p2.pos,
+            'ball': self.ball.pos,
+            'score': [self.p1.score, self.p2.score]
+        }
+
+    def finish_info(self):
+        return {
+            'p1': self.p1.pos,
+            'p2': self.p2.pos,
+            'ball': self.ball.pos,
+            'score': [self.p1.score, self.p2.score],
+            'gameOver': 'normal',
+            'winner': self.winner.id
         }

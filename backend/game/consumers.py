@@ -2,6 +2,8 @@ import asyncio
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 from .module.game import Game
+from .module.player import Player
+from .module.enum import GAME_OVER
 
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -28,8 +30,6 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
                 return
             await self.setGameStatus(True)
             await self.accept()
-            self.game = Game()
-            self.connected = True
             print('connected ' + self.model.intra_id + ': ' + str(self.model.game_status))
         else:
             await self.close()
@@ -37,18 +37,28 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         await self.setGameStatus(False)
         print("disconnected " + self.model.intra_id + ": " + str(self.model.game_status))
-        self.connected = False
         await self.close()
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
-            print('ready')
+            self.p1 = Player('player 1', 1)
+            self.p2 = Player('player 2', 2)
+            self.game = Game(self.p1, self.p2)
             asyncio.ensure_future(self.send_periodic_message())
         else:
-            self.game.set_state(content)
+            if 'w' in content:
+                self.p1.set_move_up(content['w'])
+            if 's' in content:
+                self.p1.set_move_down(content['s'])
+            if 'ArrowUp' in content:
+                self.p2.set_move_up(content['ArrowUp'])
+            if 'ArrowDown' in content:
+                self.p2.set_move_down(content['ArrowDown'])
 
     async def send_periodic_message(self):
-        while self.connected:
-            self.game.update()
+        while True:
+            if self.game.update() == GAME_OVER:
+                await self.send_json(self.game.finish_info())
+                return
             await self.send_json(self.game.info())
             await asyncio.sleep(1 / 30)
