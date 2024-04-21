@@ -8,6 +8,24 @@ let allowedKeys;
 let gameWaitingModal;
 let gameOverModal;
 
+const keydownHandler = (event) => {
+    const keydown = event.key;
+    if (keydown in allowedKeys && allowedKeys[keydown] == false) {
+      const message = { [keydown]: true };
+      socket.send(JSON.stringify(message));
+      allowedKeys[keydown] = true;
+    }
+}
+
+const keyupHandler = (event) => {
+    const keyup = event.key;
+    if (keyup in allowedKeys && allowedKeys[keyup] == true) {
+      const message = { [keyup]: false };
+      socket.send(JSON.stringify(message));
+      allowedKeys[keyup] = false;
+    }
+}
+
 const scoreHandler = (p1, p2) => {
   document.getElementById("player1score").innerText = p1;
   document.getElementById("player2score").innerText = p2;
@@ -77,6 +95,8 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
 
   socket.onclose = () => {
     console.log("WebSocket connection closed");
+    document.removeEventListener("keydown", keydownHandler);
+    document.removeEventListener("keyup", keyupHandler);
   };
 };
 
@@ -95,23 +115,8 @@ const keyEventHandler = (gameMode) => {
     };
   }
 
-  document.addEventListener("keydown", (event) => {
-    const keydown = event.key;
-    if (keydown in allowedKeys && allowedKeys[keydown] == false) {
-      const message = { [keydown]: true };
-      socket.send(JSON.stringify(message));
-      allowedKeys[keydown] = true;
-    }
-  });
-
-  document.addEventListener("keyup", (event) => {
-    const keyup = event.key;
-    if (keyup in allowedKeys && allowedKeys[keyup] == true) {
-      const message = { [keyup]: false };
-      socket.send(JSON.stringify(message));
-      allowedKeys[keyup] = false;
-    }
-  });
+  document.addEventListener("keydown", keydownHandler);
+  document.addEventListener("keyup", keyupHandler);
 };
 
 function closeSocket() {
