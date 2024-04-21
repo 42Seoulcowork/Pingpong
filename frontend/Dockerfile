@@ -14,7 +14,6 @@ COPY ./nginx.conf /etc/nginx/http.d/default.conf
 WORKDIR /app
 
 COPY index.html /app/index.html
-COPY ./src /app/src
 COPY ./public /app/public
 
 COPY package.json /app/package.json
@@ -22,7 +21,10 @@ COPY package-lock.json /app/package-lock.json
 COPY vite.config.js /app/vite.config.js
 COPY .env /app/.env
 
-RUN npm install && npm run build
+RUN npm install
+
+COPY ./src /app/src
+RUN npm run build
 
 RUN mv /app/dist/* /var/www/
 
