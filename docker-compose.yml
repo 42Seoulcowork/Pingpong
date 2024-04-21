@@ -9,8 +9,6 @@ services:
       - 443:443
     depends_on:
       - backend
-    volumes:
-      - front_volume:/var/www
 
   db:
     container_name: db
@@ -34,10 +32,3 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
-
-volumes:
-  front_volume:
-    driver_opts:
-      type: none
-      device: $PWD/frontend/dist
-      o: bind
