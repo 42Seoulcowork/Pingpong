@@ -1,3 +1,4 @@
+from .enum import Z
 class Player:
     def __init__(self, id, player):
         self.id = id
@@ -15,14 +16,14 @@ class Player:
         return self.id
     
     def move_up(self):
-        if self.pos[2] <= -13:
+        if self.pos[Z] <= -13:
             return
-        self.pos[2] -= self.speed
+        self.pos[Z] -= self.speed
 
     def move_down(self):
-        if self.pos[2] >= 13:
+        if self.pos[Z] >= 13:
             return
-        self.pos[2] += self.speed
+        self.pos[Z] += self.speed
 
     def set_move_up(self, state):
         self.move_up_state = state
