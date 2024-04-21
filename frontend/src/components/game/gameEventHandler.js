@@ -1,5 +1,5 @@
 import { dispatch, getState } from "../../state/store.js";
-import { gameOver } from "../../utils/languagePack.js";
+import { gameOver, gameBoard } from "../../utils/languagePack.js";
 import * as bootstrap from "bootstrap";
 import { SERVER_URL } from "../../utils/constants.js";
 
@@ -38,8 +38,9 @@ const nicknameHandler = (nickname1, nickname2) => {
 
 export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
+  const languageId = getState().languageId;
 
-  const webSocketURL = "wss://"+ SERVER_URL + "/ws/" + getState().gameMode + "/";
+  const webSocketURL = "wss://"+ SERVER_URL + "/ws/" + gameMode + "/";
   socket = new WebSocket(webSocketURL);
   window.addEventListener("popstate", closeSocket);
   const child = document.querySelector("#gameWaitingButton");
@@ -50,12 +51,22 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   socket.onopen = () => {
     console.log("WebSocket connection opened");
     socketOpenCallback();
-    const message = {
-        ready: true,
-        nickname: getState().nickname,
-        difficulty: getState().difficulty,
-    };
-    socket.send(JSON.stringify(message));
+    if (gameMode === 'local') {
+        const message = {
+            ready: true,
+            p1: gameBoard[languageId].player1,
+            p2: gameBoard[languageId].player2,
+            difficulty: getState().difficulty,
+        };
+        socket.send(JSON.stringify(message));
+    } else {
+        const message = {
+            ready: true,
+            nickname: getState().nickname,
+            difficulty: getState().difficulty,
+        };
+        socket.send(JSON.stringify(message));
+    }
   };
 
   socket.onerror = (event) => {
@@ -78,7 +89,7 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
       if (data.gameOver === "normal") {
         dispatch("winner", data.winner);
         document.getElementById("gameOverDescription").innerText =
-          gameOver[getState().languageId].normal + data.winner;
+          gameOver[languageId].normal + data.winner;
       }
       gameOverModalWork();
       socket.close();

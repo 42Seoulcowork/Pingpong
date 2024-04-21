@@ -41,8 +41,8 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
-            self.p1 = Player('player 1', 1)
-            self.p2 = Player('player 2', 2)
+            self.p1 = Player(content['p1'], 1)
+            self.p2 = Player(content['p2'], 2)
             self.game = Game(self.p1, self.p2)
             asyncio.ensure_future(self.send_periodic_message())
         else:
