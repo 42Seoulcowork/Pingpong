@@ -80,19 +80,24 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
       gameWaitingModalClose();
-      if (gameMode !== "local") {
-        nicknameHandler(data.nickname[0], data.nickname[1]);
-      }
+      const player1 = data.nickname[0] ? data.nickname[0] : gameBoard[languageId].player1;
+      const player2 = data.nickname[1] ? data.nickname[1] : gameBoard[languageId].player2;
+      nicknameHandler(player1, player2);
       pauseFlag = false;
-    } else if (data.gameOver !== undefined) {
+    }
+    
+    if (data.gameOver !== undefined) {
       dispatch("endReason", data.gameOver);
       if (data.gameOver === "normal") {
         dispatch("winner", data.winner);
         document.getElementById("gameOverDescription").innerText =
           gameOver[languageId].normal + data.winner;
+      } else if (data.gameOver === "error") {
+        console.log('error'); // TODO 상세구현 필요
       }
       gameOverModalWork();
       socket.close();
+      return;
     }
 
     ball.position.fromArray(data.ball);

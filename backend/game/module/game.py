@@ -47,6 +47,7 @@ class Game:
 
     def info(self):
         return {
+            'nickname': [self.p1.id, self.p2.id],
             'p1': self.p1.pos,
             'p2': self.p2.pos,
             'ball': self.ball.pos,
@@ -55,10 +56,6 @@ class Game:
 
     def finish_info(self):
         return {
-            'p1': self.p1.pos,
-            'p2': self.p2.pos,
-            'ball': self.ball.pos,
-            'score': [self.p1.score, self.p2.score],
             'gameOver': 'normal',
             'winner': self.winner.id
         }
