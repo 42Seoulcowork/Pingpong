@@ -1,17 +1,20 @@
-from .enum import Z
+from .enum import X, Z
 class Player:
-    def __init__(self, id, player):
+    def __init__(self, id):
         self.id = id
         self.move_up_state = False
         self.move_down_state = False
         self.speed = 1
         self.score = 0
-        if player == 1:
-            x = -13
-        else:
-            x = 13
-        self.pos = [x, 4, 0]
+        self.pos = [0, 4, 0]
+
     
+    def set_pos(self, player):
+        if player == 1:
+            self.pos[X] = -13
+        else:
+            self.pos[X] = 13
+
     def __str__(self):
         return self.id
     
