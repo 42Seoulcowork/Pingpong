@@ -77,7 +77,7 @@ class SessionAPI(APIView):
                 {
                     "message": "로그인이 필요합니다."
                 }
-                , status=status.HTTP_401_UNAUTHORIZED)
+                , status=status.HTTP_204_NO_CONTENT)
         return Response(
             {
                 "session_id": session_id

@@ -264,19 +264,22 @@ export const gameOver = {
   en: {
     gameOver: "Game Over!",
     normal: "The Winner is ",
-    left: "Someone left the game!",
+    alreadyInGame: "You are already in the game.",
+    disconnected: "Someone left the game!",
     closeButton: "Close",
   },
   ko: {
     gameOver: "게임 종료",
     normal: "승자는 ",
-    left: "상대방이 나갔습니다!",
+    alreadyInGame: "이미 게임 중입니다.",
+    disconnected: "상대방이 나갔습니다!",
     closeButton: "닫기",
   },
   fr: {
     gameOver: "Fin du jeu!",
     normal: "Le gagnant est ",
-    left: "Quelqu'un a quitté le jeu!",
+    alreadyInGame: "Vous êtes déjà dans le jeu.",
+    disconnected: "Quelqu'un a quitté le jeu!",
     closeButton: "Fermer",
   },
 };
