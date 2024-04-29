@@ -7,7 +7,7 @@ export const sessionAuthentication = async (trueCallback, falseCallback) => {
     credentials: "same-origin",
   })
     .then((response) => {
-      if (response.ok) {
+      if (response.status === 200) {
         trueCallback();
       } else {
         falseCallback();
