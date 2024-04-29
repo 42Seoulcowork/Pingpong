@@ -39,8 +39,10 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
             if self.model.game_status == True:
-                await send_json({'gameOver': 'error', 'reason': 'already in game'})
+                await self.send_json({'gameOver': 'already in game'})
+                return
             self.play = True
+            await self.setGameStatus(True)
             self.p1 = Player(content['p1'])
             self.p1.set_pos(1)
             self.p2 = Player(content['p2'])
@@ -105,7 +107,7 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
             self.wait_player_list.remove(self)
 
         if self.game.winner == None and self.opponent != None:
-            await self.opponent.send_json({ 'gameOver': 'error', 'reason': 'opponent disconnected'})
+            await self.opponent.send_json({ 'gameOver': 'disconnected'})
             self.opponent.opponent = None
         elif self.game.winner == self.player.id:
             await self.addWin()

@@ -9,22 +9,22 @@ let gameWaitingModal;
 let gameOverModal;
 
 const keydownHandler = (event) => {
-    const keydown = event.key;
-    if (keydown in allowedKeys && allowedKeys[keydown] == false) {
-      const message = { [keydown]: true };
-      socket.send(JSON.stringify(message));
-      allowedKeys[keydown] = true;
-    }
-}
+  const keydown = event.key;
+  if (keydown in allowedKeys && allowedKeys[keydown] == false) {
+    const message = { [keydown]: true };
+    socket.send(JSON.stringify(message));
+    allowedKeys[keydown] = true;
+  }
+};
 
 const keyupHandler = (event) => {
-    const keyup = event.key;
-    if (keyup in allowedKeys && allowedKeys[keyup] == true) {
-      const message = { [keyup]: false };
-      socket.send(JSON.stringify(message));
-      allowedKeys[keyup] = false;
-    }
-}
+  const keyup = event.key;
+  if (keyup in allowedKeys && allowedKeys[keyup] == true) {
+    const message = { [keyup]: false };
+    socket.send(JSON.stringify(message));
+    allowedKeys[keyup] = false;
+  }
+};
 
 const scoreHandler = (p1, p2) => {
   document.getElementById("player1score").innerText = p1;
@@ -40,7 +40,7 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   let pauseFlag = true;
   const languageId = getState().languageId;
 
-  const webSocketURL = "wss://"+ SERVER_URL + "/ws/" + gameMode + "/";
+  const webSocketURL = "wss://" + SERVER_URL + "/ws/" + gameMode + "/";
   socket = new WebSocket(webSocketURL);
   window.addEventListener("popstate", closeSocket);
   const child = document.querySelector("#gameWaitingButton");
@@ -51,21 +51,21 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   socket.onopen = () => {
     console.log("WebSocket connection opened");
     socketOpenCallback();
-    if (gameMode === 'local') {
-        const message = {
-            ready: true,
-            p1: gameBoard[languageId].player1,
-            p2: gameBoard[languageId].player2,
-            difficulty: getState().difficulty,
-        };
-        socket.send(JSON.stringify(message));
+    if (gameMode === "local") {
+      const message = {
+        ready: true,
+        p1: gameBoard[languageId].player1,
+        p2: gameBoard[languageId].player2,
+        difficulty: getState().difficulty,
+      };
+      socket.send(JSON.stringify(message));
     } else {
-        const message = {
-            ready: true,
-            nickname: getState().nickname,
-            difficulty: getState().difficulty,
-        };
-        socket.send(JSON.stringify(message));
+      const message = {
+        ready: true,
+        nickname: getState().nickname,
+        difficulty: getState().difficulty,
+      };
+      socket.send(JSON.stringify(message));
     }
   };
 
@@ -80,20 +80,28 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
       gameWaitingModalClose();
-      const player1 = data.nickname[0] ? data.nickname[0] : gameBoard[languageId].player1;
-      const player2 = data.nickname[1] ? data.nickname[1] : gameBoard[languageId].player2;
+      const player1 = data.nickname
+        ? data.nickname[0]
+        : gameBoard[languageId].player1;
+      const player2 = data.nickname
+        ? data.nickname[1]
+        : gameBoard[languageId].player2;
       nicknameHandler(player1, player2);
       pauseFlag = false;
     }
-    
+
     if (data.gameOver !== undefined) {
       dispatch("endReason", data.gameOver);
       if (data.gameOver === "normal") {
         dispatch("winner", data.winner);
         document.getElementById("gameOverDescription").innerText =
           gameOver[languageId].normal + data.winner;
-      } else if (data.gameOver === "error") {
-        console.log('error'); // TODO 상세구현 필요
+      } else if (data.gameOver === "already in game") {
+        document.getElementById("gameOverDescription").innerText =
+          gameOver[languageId].alreadyInGame;
+      } else if (data.gameOver === "disconnected") {
+        document.getElementById("gameOverDescription").innerText =
+          gameOver[languageId].disconnected;
       }
       gameOverModalWork();
       socket.close();
@@ -136,10 +144,10 @@ const keyEventHandler = (gameMode) => {
 };
 
 function closeSocket() {
-    if (socket && socket.readyState <= 1) {
-        socket.close();
-        window.removeEventListener("popstate", closeSocket);
-    }
+  if (socket && socket.readyState <= 1) {
+    socket.close();
+    window.removeEventListener("popstate", closeSocket);
+  }
 }
 
 export const gameWaitingModalWork = () => {
