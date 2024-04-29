@@ -5,28 +5,28 @@ from rest_framework.views import APIView
 from django.contrib.auth import login, logout
 from .models import User
 from .serializers import UserSerializer
-from config.settings import API_URL, UID, OAUTH_SECRET, REDIRECT_URI, FRONT_URL
+from config.settings import API_URL, UID, OAUTH_SECRET, REDIRECT_URI
 import requests
 
 # 개발용 테스트 계정 생성
 class TestAPI(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect(FRONT_URL)
+            return redirect('/')
         try:
             test_user = User.objects.get(intra_id='test')
         except User.DoesNotExist:
             test_user = User(intra_id='test')
             test_user.save()
         login(request, test_user)
-        return redirect(FRONT_URL)
+        return redirect('/')
 
 class OauthAPI(APIView):
     def get(self, request):
         intra_id = self.__get_intra_id(request)
         user = User.objects.get(intra_id=intra_id)
         login(request, user)
-        return redirect(FRONT_URL)
+        return redirect('/')
     
     def __get_intra_id(self, request):
         access_token = self.__get_access_token(request)
