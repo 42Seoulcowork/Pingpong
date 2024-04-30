@@ -1,12 +1,125 @@
 import { dispatch, getState } from "../../state/store.js";
-import { gameOver, gameBoard } from "../../utils/languagePack.js";
-import * as bootstrap from "bootstrap";
-import { SERVER_URL } from "../../utils/constants.js";
+import {
+  gameOver,
+  gameBoard,
+  gameWaitingModal,
+} from "../../utils/languagePack.js";
+import {
+  gameWaitingModalShow,
+  gameWaitingModalHide,
+  gameOverModalInit,
+  gameWaitingReadyButtonShow,
+  gameWaitingButtonShow,
+} from "./gameModalHandler.js";
+import {
+  scoreHandler,
+  nicknameHandler,
+  gameOverDescriptionUpdate,
+  gameResultsUpdate,
+} from "./gameHTMLHandler.js";
 
 let socket;
 let allowedKeys;
-let gameWaitingModal;
-let gameOverModal;
+let pauseFlag;
+
+function closeSocket() {
+  if (socket && socket.readyState <= 1) {
+    socket.close();
+  }
+}
+
+export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
+  pauseFlag = true;
+  const languageId = getState().languageId;
+
+  const SERVER_URL = window.location.hostname;
+  const webSocketURL = "wss://" + SERVER_URL + "/ws/" + gameMode + "/";
+  socket = new WebSocket(webSocketURL);
+  window.addEventListener("popstate", closeSocket, { once: true });
+  const child = document.querySelector("#gameWaitingButton");
+  child.addEventListener("click", closeSocket);
+
+  socket.onopen = () => {
+    console.log("WebSocket connection opened");
+    socketOpenCallback();
+    let message = {
+      ready: true,
+      difficulty: getState().difficulty,
+    };
+    if (gameMode === "local") {
+      message.p1 = gameBoard[languageId].player1;
+      message.p2 = gameBoard[languageId].player2;
+    } else {
+      message.nickname = getState().nickname;
+    }
+    socket.send(JSON.stringify(message));
+  };
+
+  socket.onerror = (event) => {
+    console.log(event);
+  };
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log(event.data);
+
+    if (pauseFlag === true) {
+      keyEventHandler(gameMode);
+      gameWaitingModalHide();
+      if (data.nickname) {
+        nicknameHandler(data.nickname[0], data.nickname[1]);
+      } else {
+        const defalutData = gameBoard[languageId];
+        nicknameHandler(defalutData.player1, defalutData.player2);
+      }
+      pauseFlag = false;
+    }
+
+    if (data.gameOver !== undefined) {
+      if (data.gameOver === "normal")
+        gameOverDescriptionUpdate(gameOver[languageId].normal + data.winner);
+      else if (data.gameOver === "already in game")
+        gameOverDescriptionUpdate(gameOver[languageId].alreadyInGame);
+      else if (data.gameOver === "disconnected")
+        gameOverDescriptionUpdate(gameOver[languageId].disconnected);
+      else if ("not authenticated")
+        gameOverDescriptionUpdate(gameOver[languageId].notAuthenticated);
+      else if (data.gameOver === "final") {
+        if (data.round === undefined) {
+          gameWaitingModalDescriptionUpdate(gameOver[languageId].final);
+          gameWaitingModalShow();
+        } else {
+          gameResultsUpdate(data.round);
+          const readyButton = document.getElementById("gameWaitingReadyButton");
+          readyButton.addEventListener("click", readyButtonHandler, {
+            once: true,
+          });
+          gameWaitingReadyButtonShow();
+        }
+        return;
+      }
+      dispatch("endReason", data.gameOver);
+      gameOverModalInit();
+      socket.close();
+      return;
+    }
+
+    ball.position.fromArray(data.ball);
+    p1.position.fromArray(data.p1);
+    p2.position.fromArray(data.p2);
+
+    scoreHandler(data.score[0], data.score[1]);
+
+    console.log("Received data:", data);
+  };
+
+  socket.onclose = () => {
+    console.log("WebSocket connection closed");
+    pauseFlag = true;
+    document.removeEventListener("keydown", keydownHandler);
+    document.removeEventListener("keyup", keyupHandler);
+  };
+};
 
 const keydownHandler = (event) => {
   const keydown = event.key;
@@ -24,104 +137,6 @@ const keyupHandler = (event) => {
     socket.send(JSON.stringify(message));
     allowedKeys[keyup] = false;
   }
-};
-
-const scoreHandler = (p1, p2) => {
-  document.getElementById("player1score").innerText = p1;
-  document.getElementById("player2score").innerText = p2;
-};
-
-const nicknameHandler = (nickname1, nickname2) => {
-  document.getElementById("player1name").innerText = nickname1;
-  document.getElementById("player2name").innerText = nickname2;
-};
-
-export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
-  let pauseFlag = true;
-  const languageId = getState().languageId;
-
-  const webSocketURL = "wss://" + SERVER_URL + "/ws/" + gameMode + "/";
-  socket = new WebSocket(webSocketURL);
-  window.addEventListener("popstate", closeSocket);
-  const child = document.querySelector("#gameWaitingButton");
-  child.addEventListener("click", () => {
-    socket.close();
-  });
-
-  socket.onopen = () => {
-    console.log("WebSocket connection opened");
-    socketOpenCallback();
-    if (gameMode === "local") {
-      const message = {
-        ready: true,
-        p1: gameBoard[languageId].player1,
-        p2: gameBoard[languageId].player2,
-        difficulty: getState().difficulty,
-      };
-      socket.send(JSON.stringify(message));
-    } else {
-      const message = {
-        ready: true,
-        nickname: getState().nickname,
-        difficulty: getState().difficulty,
-      };
-      socket.send(JSON.stringify(message));
-    }
-  };
-
-  socket.onerror = (event) => {
-    console.log(event);
-  };
-
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log(event.data);
-
-    if (pauseFlag === true) {
-      keyEventHandler(gameMode);
-      gameWaitingModalClose();
-      const player1 = data.nickname
-        ? data.nickname[0]
-        : gameBoard[languageId].player1;
-      const player2 = data.nickname
-        ? data.nickname[1]
-        : gameBoard[languageId].player2;
-      nicknameHandler(player1, player2);
-      pauseFlag = false;
-    }
-
-    if (data.gameOver !== undefined) {
-      dispatch("endReason", data.gameOver);
-      if (data.gameOver === "normal") {
-        dispatch("winner", data.winner);
-        document.getElementById("gameOverDescription").innerText =
-          gameOver[languageId].normal + data.winner;
-      } else if (data.gameOver === "already in game") {
-        document.getElementById("gameOverDescription").innerText =
-          gameOver[languageId].alreadyInGame;
-      } else if (data.gameOver === "disconnected") {
-        document.getElementById("gameOverDescription").innerText =
-          gameOver[languageId].disconnected;
-      }
-      gameOverModalWork();
-      socket.close();
-      return;
-    }
-
-    ball.position.fromArray(data.ball);
-    p1.position.fromArray(data.p1);
-    p2.position.fromArray(data.p2);
-
-    scoreHandler(data.score[0], data.score[1]);
-
-    console.log("Received data:", data);
-  };
-
-  socket.onclose = () => {
-    console.log("WebSocket connection closed");
-    document.removeEventListener("keydown", keydownHandler);
-    document.removeEventListener("keyup", keyupHandler);
-  };
 };
 
 const keyEventHandler = (gameMode) => {
@@ -143,23 +158,15 @@ const keyEventHandler = (gameMode) => {
   document.addEventListener("keyup", keyupHandler);
 };
 
-function closeSocket() {
-  if (socket && socket.readyState <= 1) {
-    socket.close();
-    window.removeEventListener("popstate", closeSocket);
-  }
-}
-
-export const gameWaitingModalWork = () => {
-  gameWaitingModal = new bootstrap.Modal("#gameWaitingModal");
-  gameWaitingModal.show();
-};
-
-const gameWaitingModalClose = () => {
-  gameWaitingModal.hide();
-};
-
-const gameOverModalWork = () => {
-  gameOverModal = new bootstrap.Modal("#gameOverModal");
-  gameOverModal.show();
+const readyButtonHandler = () => {
+  socket.send(
+    JSON.stringify({
+      ready: true,
+      difficulty: getState().difficulty,
+      nickname: getState().nickname,
+    })
+  );
+  pauseFlag = true;
+  gameWaitingModalDescriptionUpdate(gameWaitingModal[languageId].description);
+  gameWaitingButtonShow();
 };

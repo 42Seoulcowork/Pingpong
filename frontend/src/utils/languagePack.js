@@ -247,16 +247,28 @@ export const gameWaitingModal = {
     waiting: "Waiting",
     description: "Waiting for game creation or other players.",
     cancel: "Cancel",
+    firstMatch: "The winner of the first match is ",
+    secondMatch: "The winner of the second match is ",
+    loser: ", and the loser is ",
+    ready: "Ready",
   },
   ko: {
     waiting: "대기중",
     description: "게임 생성 또는 다른 플레이어를 기다리고 있습니다.",
     cancel: "취소",
+    firstMatch: "첫번째 경기의 승자는 ",
+    secondMatch: "두번째 경기의 승자는 ",
+    loser: "이고 패자는 ",
+    ready: "준비 완료",
   },
   fr: {
     waiting: "En attente",
     description: "En attente de la création du jeu ou d'autres joueurs.",
     cancel: "Annuler",
+    firstMatch: "Le gagnant du premier match est ",
+    secondMatch: "Le gagnant du deuxième match est ",
+    loser: ", et le perdant est ",
+    ready: "Prêt à partir",
   },
 };
 
@@ -266,21 +278,28 @@ export const gameOver = {
     normal: "The Winner is ",
     alreadyInGame: "You are already in the game.",
     disconnected: "Someone left the game!",
+    notAuthenticated: "Please log in first",
     closeButton: "Close",
+    final: "You're in the finals! Waiting for the other matches to finish.",
   },
   ko: {
     gameOver: "게임 종료",
     normal: "승자는 ",
     alreadyInGame: "이미 게임 중입니다.",
     disconnected: "상대방이 나갔습니다!",
+    notAuthenticated: "먼저 로그인 해주세요",
     closeButton: "닫기",
+    final: "결승 진출! 다른 경기가 끝날때까지 대기 중입니다.",
   },
   fr: {
     gameOver: "Fin du jeu!",
     normal: "Le gagnant est ",
     alreadyInGame: "Vous êtes déjà dans le jeu.",
     disconnected: "Quelqu'un a quitté le jeu!",
+    notAuthenticated: "Veuillez d'abord vous connecter",
     closeButton: "Fermer",
+    final:
+      "Vous êtes en finale! En attendant que les autres matches se terminent.",
   },
 };
 

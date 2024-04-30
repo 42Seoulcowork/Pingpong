@@ -12,13 +12,14 @@ export default class GameWaitingModal extends Component {
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-3 p-2 nanum-gothic-bold">${gameWaitingModal[languageId].waiting}</h1>
+            <h1 class="modal-title fs-3 p-2 nanum-gothic-bold" id="gameWaitingModalTitle">${gameWaitingModal[languageId].waiting}</h1>
           </div>
           <div class="modal-body">
-            <p class="fs-3 p-2 m-1">${gameWaitingModal[languageId].description}</p>
+            <p class="fs-3 p-2 m-1" id="gameWaitingModalDescription">${gameWaitingModal[languageId].description}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal" id="gameWaitingButton">${gameWaitingModal[languageId].cancel}</button>
+            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal" id="gameWaitingReadyButton" hidden>${gameWaitingModal[languageId].ready}</button>
           </div>
         </div>
       </div>
