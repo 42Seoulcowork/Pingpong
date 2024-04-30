@@ -106,7 +106,7 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         if self.play:
             await self.setGameStatus(False)
-        
+
         if self in self.wait_player_list:
             self.wait_player_list.remove(self)
 
@@ -114,12 +114,6 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
         if self.game.winner == None and self.opponent != None:
             await self.opponent.send_json({ 'gameOver': 'disconnected'})
             self.opponent.opponent = None
-        
-        # 게임이 끝났을 때 승패 정보 저장
-        if self.game.winner == self.player:
-            await self.addWin()
-        elif self.game.winner == self.opponent.player:
-            await self.addLose()
 
         await self.close()
 
@@ -136,6 +130,15 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
             return False
         return True
 
+    async def make_game(self):
+        self.opponent = self.wait_player_list.pop()
+        self.opponent.opponent = self
+        self.opponent.player.set_pos(1)
+        self.player.set_pos(2)
+        self.game = Game(self.opponent.player, self.player)
+        self.opponent.game = self.game
+        asyncio.ensure_future(self.send_periodic_message())
+
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
             if not await self.check_auth():
@@ -146,18 +149,13 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
 
             self.play = True
             await self.setGameStatus(True)
+            self.player = Player(content['nickname'])
+        
             if len(self.wait_player_list) == 0:
-                self.player = Player(content['nickname'])
                 self.wait_player_list.append(self)
             else:
-                self.player = Player(content['nickname'])
-                self.opponent = self.wait_player_list.pop()
-                self.opponent.opponent = self
-                self.opponent.player.set_pos(1)
-                self.player.set_pos(2)
-                self.game = Game(self.opponent.player, self.player)
-                self.opponent.game = self.game
-                asyncio.ensure_future(self.send_periodic_message())
+                await self.make_game()
+
         else:
             if 'ArrowUp' in content:
                 self.player.set_move_up(content['ArrowUp'])
@@ -169,7 +167,16 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
             if self.game.update() == GAME_OVER:
                 finish_info = self.game.finish_info()
                 await self.send_and_opponent_json(finish_info)
+
+                # 승패에 따라 승리, 패배 횟수 업데이트
+                if self.game.winner == self.player:
+                    await self.addWin()
+                    await self.opponent.addLose()
+                else:
+                    await self.addLose()
+                    await self.opponent.addWin()
                 return
+
             game_info = self.game.info()
             await self.send_and_opponent_json(game_info)
             await asyncio.sleep(1 / 30)
@@ -177,3 +184,92 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
     async def send_and_opponent_json(self, data):
         await self.send_json(data)
         await self.opponent.send_json(data)
+
+class TournamentGameConsumer(AsyncJsonWebsocketConsumer):
+    wait_player_list = []
+    @database_sync_to_async
+    def getModel(self):
+        return User.objects.get(intra_id=self.user.intra_id)
+    
+    @database_sync_to_async
+    def setGameStatus(self, status):
+        self.model.game_status = status
+        self.model.save()
+
+    @database_sync_to_async
+    def addWin(self):
+        self.model.win += 1
+        self.model.save()
+
+    @database_sync_to_async
+    def addLose(self):
+        self.model.lose += 1
+        self.model.save()
+
+    async def connect(self):
+        self.user = self.scope['user']
+        await self.accept()
+    
+    async def disconnect(self, close_code):
+        if self.play:
+            await self.setGameStatus(False)
+        
+        if self in self.wait_player_list:
+            self.wait_player_list.remove(self)
+
+        # 연결이 끊겼을 때 상대방에게 연결이 끊겼다고 알림
+        if self.game.winner == None and self.opponent != None:
+            await self.opponent.send_json({ 'gameOver': 'disconnected'})
+            self.opponent.opponent = None
+
+        await self.close()
+
+    async def check_auth(self):
+        if not self.user.is_authenticated:
+            await self.send_json({'gameOver': 'not authenticated'})
+            return False
+        return True
+
+    async def check_game_status(self):
+        self.model = await self.getModel()
+        if self.model.game_status == True:
+            await self.send_json({'gameOver': 'already in game'})
+            return False
+        return True
+
+    async def make_game(self):
+        self.opponent = self.wait_player_list.pop()
+        self.opponent.opponent = self
+        self.opponent.player.set_pos(1)
+        self.player.set_pos(2)
+        self.game = Game(self.opponent.player, self.player)
+        self.opponent.game = self.game
+        asyncio.ensure_future(self.send_periodic_message())
+
+    async def receive_json(self, content, **kwargs):
+        if 'ready' in content:
+            if not await self.check_auth():
+                return
+            
+            if not await self.check_game_status():
+                return
+            
+            self.play = True
+            await self.setGameStatus(True)
+            self.player = Player(content['nickname'])
+
+            if len(self.wait_player_list) == 3:
+                await self.make_game()
+                self.wait_player_list.pop().make_game()
+
+            else:
+                self.wait_player_list.append(self)
+
+        else:
+            if 'ArrowUp' in content:
+                self.player.set_move_up(content['ArrowUp'])
+            if 'ArrowDown' in content:
+                self.player.set_move_down(content['ArrowDown'])
+
+    async def send_periodic_message(self):
+        pass
