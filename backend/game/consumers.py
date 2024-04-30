@@ -23,24 +23,34 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope['user']
-        if self.user.is_authenticated:
-            self.model = await self.getModel()
-            await self.accept()
-            print('connected ' + self.model.intra_id + ': ' + str(self.model.game_status))
-        else:
-            await self.close()
+        await self.accept()
 
     async def disconnect(self, close_code):
         if self.play:
             await self.setGameStatus(False)
-        print("disconnected " + self.model.intra_id + ": " + str(self.model.game_status))
         await self.close()
+
+    async def check_auth(self):
+        if not self.user.is_authenticated:
+            await self.send_json({'gameOver': 'not authenticated'})
+            return False
+        return True
+
+    async def check_game_status(self):
+        self.model = await self.getModel()
+        if self.model.game_status == True:
+            await self.send_json({'gameOver': 'already in game'})
+            return False
+        return True
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
-            if self.model.game_status == True:
-                await self.send_json({'gameOver': 'already in game'})
+            if not await self.check_auth():
                 return
+
+            if not await self.check_game_status():
+                return
+
             self.play = True
             await self.setGameStatus(True)
             self.p1 = Player(content['p1'])
@@ -91,34 +101,51 @@ class RemoteGameConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope['user']
-        if self.user.is_authenticated:
-            self.model = await self.getModel()
-            if self.model.game_status == True:
-                await self.close()
-                return
-            await self.setGameStatus(True)
-            await self.accept()
-        else:
-            await self.close()
+        await self.accept()
 
     async def disconnect(self, close_code):
-        await self.setGameStatus(False)
+        if self.play:
+            await self.setGameStatus(False)
+        
         if self in self.wait_player_list:
             self.wait_player_list.remove(self)
 
+        # 연결이 끊겼을 때 상대방에게 연결이 끊겼다고 알림
         if self.game.winner == None and self.opponent != None:
             await self.opponent.send_json({ 'gameOver': 'disconnected'})
             self.opponent.opponent = None
-        elif self.game.winner == self.player.id:
+        
+        # 게임이 끝났을 때 승패 정보 저장
+        if self.game.winner == self.player:
             await self.addWin()
-        elif self.game.winner == self.opponent.player.id:
+        elif self.game.winner == self.opponent.player:
             await self.addLose()
 
-        print("disconnected " + self.model.intra_id + ": " + str(self.model.game_status))
         await self.close()
+
+    async def check_auth(self):
+        if not self.user.is_authenticated:
+            await self.send_json({'gameOver': 'not authenticated'})
+            return False
+        return True
+
+    async def check_game_status(self):
+        self.model = await self.getModel()
+        if self.model.game_status == True:
+            await self.send_json({'gameOver': 'already in game'})
+            return False
+        return True
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
+            if not await self.check_auth():
+                return
+
+            if not await self.check_game_status():
+                return
+
+            self.play = True
+            await self.setGameStatus(True)
             if len(self.wait_player_list) == 0:
                 self.player = Player(content['nickname'])
                 self.wait_player_list.append(self)
