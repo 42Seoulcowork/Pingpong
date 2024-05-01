@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
 import { socketHandler } from "./gameEventHandler.js";
-// import { getState } from "../../state/store.js";
+import { getState } from "../../state/store.js";
 
 const paddle = (position_x, position_z, color) => {
   const geometry = new THREE.BoxGeometry(1, 3, 5);
@@ -62,7 +62,11 @@ export const pingpong = (gameMode) => {
 
     // scene.add( new THREE.CameraHelper( spotLight.shadow.camera ));
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 3);
+    const lightColor = { day: 0xffffff, night: 0x404040 };
+    const dirLight = new THREE.DirectionalLight(
+      lightColor[getState().appearance],
+      3
+    );
     dirLight.name = "Dir. Light";
     dirLight.position.set(0, 10, 0);
     dirLight.castShadow = true;
@@ -91,9 +95,10 @@ export const pingpong = (gameMode) => {
     table.receiveShadow = true;
     scene.add(table);
 
+    const ballColor = { red: 0xff0000, yellow: 0xffff00, purple: 0x800080 };
     geometry = new THREE.SphereGeometry(1, 32, 32);
     material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
+      color: ballColor[getState().ballColor],
       shininess: 150,
       specular: 0x222222,
     });
