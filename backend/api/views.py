@@ -21,6 +21,42 @@ class TestAPI(APIView):
         login(request, test_user)
         return redirect('/')
 
+class TestAPI1(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('/')
+        try:
+            test_user = User.objects.get(intra_id='test1')
+        except User.DoesNotExist:
+            test_user = User(intra_id='test1')
+            test_user.save()
+        login(request, test_user)
+        return redirect('/')
+
+class TestAPI2(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('/')
+        try:
+            test_user = User.objects.get(intra_id='test2')
+        except User.DoesNotExist:
+            test_user = User(intra_id='test2')
+            test_user.save()
+        login(request, test_user)
+        return redirect('/')
+
+class TestAPI3(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('/')
+        try:
+            test_user = User.objects.get(intra_id='test3')
+        except User.DoesNotExist:
+            test_user = User(intra_id='test3')
+            test_user.save()
+        login(request, test_user)
+        return redirect('/')
+
 class OauthAPI(APIView):
     def get(self, request):
         intra_id = self.__get_intra_id(request)
