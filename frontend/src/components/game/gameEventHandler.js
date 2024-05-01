@@ -16,6 +16,7 @@ import {
   nicknameHandler,
   gameOverDescriptionUpdate,
   gameResultsUpdate,
+  gameWaitingModalDescriptionUpdate,
 } from "./gameHTMLHandler.js";
 
 let socket;
