@@ -166,6 +166,7 @@ const readyButtonHandler = () => {
     })
   );
   pauseFlag = true;
+  const languageId = getState().languageId;
   gameWaitingModalDescriptionUpdate(gameWaitingModal[languageId].description);
   gameWaitingButtonShow();
 };
