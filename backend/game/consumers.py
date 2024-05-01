@@ -234,6 +234,7 @@ class TournamentGameConsumer(RemoteGameConsumer):
                 self.player.set_move_down(content['ArrowDown'])
 
     async def send_round_result(self, round_list):
+        self.round.status = 'end'
         await self.round.winner.send_json({'gameOver': 'final'})
         await self.round.loser.send_json(self.game.finish_info())
 
