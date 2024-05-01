@@ -5,15 +5,13 @@ class Player:
         self.move_up_state = False
         self.move_down_state = False
         self.speed = 1
-        self.score = 0
-        self.pos = [0, 4, 0]
 
-    
     def set_pos(self, player):
         if player == 1:
-            self.pos[X] = -13
+            self.pos = [-13, 4, 0]
         else:
-            self.pos[X] = 13
+            self.pos = [13, 4, 0]
+        self.score = 0
 
     def __str__(self):
         return self.id

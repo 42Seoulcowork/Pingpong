@@ -220,10 +220,9 @@ class TournamentGameConsumer(RemoteGameConsumer):
         elif 'final' in content:
             if hasattr(self, 'final_player_list') and self in self.final_player_list:
 
+                self.is_final_game = True
                 if len(self.final_wait_list) == 1:
-                    self.is_final_game = True
-                    self.make_game(self.final_wait_list.pop())
-                    self.final_player_list.clear()
+                    await self.final_player_list[0].make_game(self.final_player_list[1])
                 else:
                     self.final_wait_list.append(self)
 
