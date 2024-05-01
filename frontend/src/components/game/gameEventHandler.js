@@ -161,9 +161,7 @@ const keyEventHandler = (gameMode) => {
 const readyButtonHandler = () => {
   socket.send(
     JSON.stringify({
-      ready: true,
-      difficulty: getState().difficulty,
-      nickname: getState().nickname,
+      final: true,
     })
   );
   pauseFlag = true;
