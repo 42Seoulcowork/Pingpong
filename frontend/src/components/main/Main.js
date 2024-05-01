@@ -7,6 +7,8 @@ import { dispatch, getState } from "../../state/store.js";
 
 export default class Main extends Component {
   didMount() {
+    dispatch("newGame", false);
+
     const headerFlag = document.getElementById("header").childElementCount;
     if (headerFlag === 0) {
       const $header = document.getElementById("header");
@@ -111,17 +113,22 @@ export default class Main extends Component {
   }
 
   setEvent() {
+    const nicknameLine = document.getElementById("nicknameLine");
+
     this.addEvent("click", "#localGameChoiceButton", () => {
       dispatch("gameMode", "local");
       dispatch("newGame", true);
+      nicknameLine.hidden = true;
     });
     this.addEvent("click", "#remoteGameChoiceButton", () => {
       dispatch("gameMode", "remote");
       dispatch("newGame", true);
+      nicknameLine.hidden = false;
     });
     this.addEvent("click", "#tournamentGameChoiceButton", () => {
       dispatch("gameMode", "tournament");
       dispatch("newGame", true);
+      nicknameLine.hidden = false;
     });
   }
 }

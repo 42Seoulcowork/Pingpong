@@ -17,11 +17,11 @@ export default class GameSettingModal extends Component {
           </div>
           <form id="gameSettingForm">
             <div class="modal-body">
-              <div class="mb-3">
+              <div class="mb-3" id="nicknameLine">
                 <label for="nickname" class="form-label">${gameSettingCard[languageId].nickname}</label>
                 <div class="row">
                   <div class="col">
-                    <input type="text" class="form-control" name="nickname" id="nickname" placeholder="your nickname" required maxlength="10">
+                    <input type="text" class="form-control" name="nickname" id="nickname" placeholder="your nickname" maxlength="10">
                   </div>
                   <div class="col"></div>
                 </div>
@@ -115,14 +115,18 @@ export default class GameSettingModal extends Component {
 
       const formData = new FormData(form);
 
-      const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
-      if (regExp.test(formData.get("nickname"))) {
-        const $special = document.getElementById("specialCharacterModal");
-        const modal = new bootstrap.Modal($special);
-        modal.show();
-        return;
+      if (getState().gameMode === "local") {
+        formData.set("nickname", "Default_Nickname");
+      } else {
+        const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+        const nickname = formData.get("nickname");
+        if (nickname === "" || regExp.test(nickname)) {
+          const $special = document.getElementById("specialCharacterModal");
+          const modal = new bootstrap.Modal($special);
+          modal.show();
+          return;
+        }
       }
-
       formData.forEach((value, key) => dispatch(key, value));
 
       router.push("/game");

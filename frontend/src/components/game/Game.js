@@ -2,7 +2,7 @@ import Component from "../Component.js";
 import GameRestrictionModal from "./GameRestrictionModal.js";
 import GameWaitingModal from "./GameWaitingModal.js";
 import GameOverModal from "./GameOverModal.js";
-import { gameWaitingModalWork } from "./gameEventHandler.js";
+import { gameWaitingModalInit } from "./gameModalHandler.js";
 import { pingpong } from "./pingpong.js";
 import { gameBoard } from "../../utils/languagePack.js";
 import { router } from "../../utils/Router.js";
@@ -28,7 +28,7 @@ export default class Game extends Component {
 
     const $gameWaiting = document.getElementById("gameWaiting");
     new GameWaitingModal($gameWaiting, this.state);
-    gameWaitingModalWork();
+    gameWaitingModalInit();
 
     const $gameOver = document.getElementById("gameOver");
     new GameOverModal($gameOver, this.state);
