@@ -82,7 +82,7 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
         gameOverDescriptionUpdate(gameOver[languageId].alreadyInGame);
       else if (data.gameOver === "disconnected")
         gameOverDescriptionUpdate(gameOver[languageId].disconnected);
-      else if ("not authenticated")
+      else if (data.gameOver === "not authenticated")
         gameOverDescriptionUpdate(gameOver[languageId].notAuthenticated);
       else if (data.gameOver === "final") {
         if (data.round === undefined) {
