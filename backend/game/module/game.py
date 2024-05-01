@@ -8,6 +8,7 @@ class Game:
         self.p2 = p2
         self.ball = Ball(speed, [1, 0, -1])
         self.winner = None
+        self.status = 'playing'
 
     def update(self):
         self.p1.update()
@@ -19,9 +20,11 @@ class Game:
         self.update_score()
         if self.p1.score == 5:
             self.winner = self.p1
+            self.status = 'end'
             return GAME_OVER
         if self.p2.score == 5:
             self.winner = self.p2
+            self.status = 'end'
             return GAME_OVER
         return 0
 

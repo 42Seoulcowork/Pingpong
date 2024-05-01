@@ -16,6 +16,7 @@ import {
   nicknameHandler,
   gameOverDescriptionUpdate,
   gameResultsUpdate,
+  gameWaitingModalDescriptionUpdate,
 } from "./gameHTMLHandler.js";
 
 let socket;
@@ -165,6 +166,7 @@ const readyButtonHandler = () => {
     })
   );
   pauseFlag = true;
+  const languageId = getState().languageId;
   gameWaitingModalDescriptionUpdate(gameWaitingModal[languageId].description);
   gameWaitingButtonShow();
 };
