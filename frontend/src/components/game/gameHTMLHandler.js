@@ -28,12 +28,12 @@ export const gameResultsUpdate = (round) => {
     gameWaitingModal[languageId].firstMatch +
     round[0].winner +
     gameWaitingModal[languageId].loser +
-    round[0].losser;
+    round[0].loser;
   const secondMatch =
     gameWaitingModal[languageId].secondMatch +
     round[1].winner +
     gameWaitingModal[languageId].loser +
-    round[1].losser;
+    round[1].loser;
   document.getElementById("gameWaitingModalDescription").innerText =
     firstMatch + "<br />" + secondMatch;
 };

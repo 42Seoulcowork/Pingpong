@@ -182,7 +182,7 @@ export const gameSettingCard = {
     start: "Start",
     unprepared: "Please start in the normal way.",
     confirm: "Confirm",
-    specialCharacter: "Special characters cannot be used.",
+    specialCharacter: "Special characters and empty nicknames cannot be used.",
   },
   ko: {
     setting: "PINGPONG 설정",
@@ -201,7 +201,7 @@ export const gameSettingCard = {
     start: "시작",
     unprepared: "정상적인 방법으로 시작해주세요.",
     confirm: "확인",
-    specialCharacter: "특수문자는 사용할 수 없습니다.",
+    specialCharacter: "특수문자와 비어있는 닉네임은 사용할 수 없습니다.",
   },
   fr: {
     setting: "Réglage de PINGPONG",
@@ -220,7 +220,8 @@ export const gameSettingCard = {
     start: "Démarrer",
     unprepared: "Veuillez démarrer de manière normale.",
     confirm: "Confirmer",
-    specialCharacter: "Les caractères spéciaux ne peuvent pas être utilisés.",
+    specialCharacter:
+      "Les caractères spéciaux et les pseudonymes vides ne peuvent pas être utilisés.",
   },
 };
 
