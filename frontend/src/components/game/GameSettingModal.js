@@ -85,8 +85,8 @@ export default class GameSettingModal extends Component {
               </div>        
             </div>
             <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary px-4" id="gameSettingClosebutton">${gameSettingCard[languageId].close}</button>
               <button type="submit" class="btn btn-outline-info px-4" id="gameStartbutton">${gameSettingCard[languageId].start}</button>
-              <button type="button" class="btn btn-outline-warning px-4" id="gameSettingClosebutton">${gameSettingCard[languageId].close}</button>
             </div>
           </form>
         </div>
@@ -99,7 +99,7 @@ export default class GameSettingModal extends Component {
             <h1 class="modal-title fs-3 p-3 nanum-gothic-bold">${gameSettingCard[languageId].specialCharacter}</h1>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-warning px-4" id="specialCharacterModalCloseButton">${gameSettingCard[languageId].close}</button>
+            <button type="button" class="btn btn-outline-dark px-4" id="specialCharacterModalCloseButton">${gameSettingCard[languageId].close}</button>
           </div>
         </div>
       </div>
@@ -110,14 +110,9 @@ export default class GameSettingModal extends Component {
   setEvent() {
     const form = this.target.querySelector("#gameSettingForm");
 
-    // document
-    //   .getElementById("gameSettingClosebutton")
-    //   .addEventListener("click", () => {
-    //     form.reset();
-    //   });
-    // this.addEvent("click", "#gameSettingClosebutton", () => {
-    //   form.reset();
-    // });
+    this.addEvent("click", "#gameSettingClosebutton", () => {
+      form.reset();
+    });
 
     this.addEvent("submit", "#gameSettingForm", (event) => {
       event.preventDefault();
