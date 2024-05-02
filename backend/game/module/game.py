@@ -31,10 +31,10 @@ class Game:
     def update_score(self):
         if self.ball.pos[X] <= -24:
             self.p2.add_score()
-            self.ball.update(0.5, [1, 0, -1])
+            self.ball.update([1, 0, -1])
         if self.ball.pos[X] >= 24:
             self.p1.add_score()
-            self.ball.update(0.5, [-1, 0, 1])
+            self.ball.update([-1, 0, 1])
 
     def hit_wall(self):
         if self.ball.pos[Z] <= -14 or self.ball.pos[Z] >= 14:

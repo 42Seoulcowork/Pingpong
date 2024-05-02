@@ -1,10 +1,10 @@
 from .enum import X, Z
 class Player:
-    def __init__(self, id):
+    def __init__(self, id, speed=1):
         self.id = id
         self.move_up_state = False
         self.move_down_state = False
-        self.speed = 1
+        self.speed = speed
 
     def set_pos(self, player):
         if player == 1:
