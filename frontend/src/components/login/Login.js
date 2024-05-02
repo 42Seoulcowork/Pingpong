@@ -18,7 +18,9 @@ export default class Login extends Component {
     const languageId = getState().languageId;
     const SERVER_URL = window.location.hostname;
     const OAuth_URL =
-      import.meta.env.OAUTH_URL_1 + SERVER_URL + import.meta.env.OAUTH_URL_2;
+      import.meta.env.VITE_OAUTH_URL_1 +
+      SERVER_URL +
+      import.meta.env.VITE_OAUTH_URL_2;
     const loginStatus = getState().isLoggedIn;
     if (loginStatus === true) {
       router.push("/");
