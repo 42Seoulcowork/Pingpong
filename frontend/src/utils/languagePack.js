@@ -56,14 +56,17 @@ export const logoutButton = {
   en: {
     logoutDescription: "Logout",
     logoutRestriction: "Logout failed",
+    confirm: "Confirm",
   },
   ko: {
     logoutDescription: "로그아웃",
     logoutRestriction: "로그아웃 실패",
+    confirm: "확인",
   },
   fr: {
     logoutDescription: "Déconnexion",
     logoutRestriction: "Déconnexion échouée",
+    confirm: "Confirmer",
   },
 };
 

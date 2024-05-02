@@ -3,6 +3,7 @@ import Component from "../Component.js";
 import GameSettingModal from "../game/GameSettingModal.js";
 import { gameModeCard } from "../../utils/languagePack.js";
 import { router } from "../../utils/Router.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import { dispatch, getState } from "../../state/store.js";
 
 export default class Main extends Component {
@@ -19,6 +20,14 @@ export default class Main extends Component {
       "#gameSettingModalWrapper"
     );
     new GameSettingModal($gameSettingModal, this.state);
+
+    const closeButtons = ["gameStartbutton", "gameSettingClosebutton"];
+    const openButtons = [
+      "localGameChoiceButton",
+      "remoteGameChoiceButton",
+      "tournamentGameChoiceButton",
+    ];
+    modalInit("gameSettingModal", closeButtons, openButtons, false);
   }
 
   template() {
@@ -50,13 +59,7 @@ export default class Main extends Component {
                   ${gameModeCard[languageId].LocalDescription}
                 </p>
                 <div class="d-grid gap-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-info d-grid gap-2 btn-lg"
-                    id="localGameChoiceButton"
-                    data-bs-toggle="modal"
-                    data-bs-target="#gameSettingModal"
-                  >
+                  <button type="button" class="btn btn-outline-info d-grid gap-2 btn-lg" id="localGameChoiceButton">
                     ${gameModeCard[languageId].start}
                   </button>
                 </div>
@@ -71,13 +74,7 @@ export default class Main extends Component {
                   ${gameModeCard[languageId].RemoteDescription}
                 </p>
                 <div class="d-grid gap-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-warning d-grid gap-2 btn-lg"
-                    id="remoteGameChoiceButton"
-                    data-bs-toggle="modal"
-                    data-bs-target="#gameSettingModal"
-                  >
+                  <button type="button" class="btn btn-outline-warning d-grid gap-2 btn-lg" id="remoteGameChoiceButton">
                     ${gameModeCard[languageId].start}
                   </button>
                 </div>
@@ -92,13 +89,7 @@ export default class Main extends Component {
                   ${gameModeCard[languageId].TournamentDescription}
                 </p>
                 <div class="d-grid gap-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-dark d-grid gap-2 btn-lg"
-                    id="tournamentGameChoiceButton"
-                    data-bs-toggle="modal"
-                    data-bs-target="#gameSettingModal"
-                  >
+                  <button type="button" class="btn btn-outline-dark d-grid gap-2 btn-lg" id="tournamentGameChoiceButton">
                     ${gameModeCard[languageId].start}
                   </button>
                 </div>

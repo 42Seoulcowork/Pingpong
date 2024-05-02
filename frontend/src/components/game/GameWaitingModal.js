@@ -18,8 +18,8 @@ export default class GameWaitingModal extends Component {
             <p class="fs-3 p-2 m-1" id="gameWaitingModalDescription">${gameWaitingModal[languageId].description}</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal" id="gameWaitingButton">${gameWaitingModal[languageId].cancel}</button>
-            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal" id="gameWaitingReadyButton" hidden>${gameWaitingModal[languageId].ready}</button>
+            <button type="button" class="btn btn-outline-dark btn-lg" id="gameWaitingCloseButton">${gameWaitingModal[languageId].cancel}</button>
+            <button type="button" class="btn btn-outline-primary btn-lg" id="gameWaitingReadyButton" hidden>${gameWaitingModal[languageId].ready}</button>
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@ export default class GameWaitingModal extends Component {
   }
 
   setEvent() {
-    this.addEvent("click", "#gameWaitingButton", () => {
+    this.addEvent("click", "#gameWaitingCloseButton", () => {
       router.push("/");
     });
   }

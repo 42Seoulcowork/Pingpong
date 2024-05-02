@@ -1,4 +1,3 @@
-import { dispatch, getState } from "../../state/store.js";
 import { gameOver, gameWaitingModal } from "../../utils/languagePack.js";
 
 export const scoreHandler = (player1, player2) => {
@@ -11,6 +10,16 @@ export const nicknameHandler = (nickname1, nickname2) => {
   document.getElementById("player2name").innerText = nickname2;
 };
 
+export const gameWaitingReadyButtonShow = () => {
+  document.getElementById("gameWaitingReadyButton").hidden = false;
+  document.getElementById("gameWaitingCloseButton").hidden = true;
+};
+
+export const gameWaitingButtonShow = () => {
+  document.getElementById("gameWaitingCloseButton").hidden = false;
+  document.getElementById("gameWaitingReadyButton").hidden = true;
+};
+
 export const gameOverDescriptionUpdate = (newText) => {
   document.getElementById("gameOverDescription").innerText = newText;
 };
@@ -19,8 +28,7 @@ export const gameWaitingModalDescriptionUpdate = (newText) => {
   document.getElementById("gameWaitingModalDescription").innerText = newText;
 };
 
-export const gameResultsUpdate = (round) => {
-  const languageId = getState().languageId;
+export const gameResultsUpdate = (round, languageId) => {
   document.getElementById("gameWaitingModalTitle").innerText =
     gameOver[languageId].gameOver;
 
@@ -34,6 +42,7 @@ export const gameResultsUpdate = (round) => {
     round[1].winner +
     gameWaitingModal[languageId].loser +
     round[1].loser;
-  document.getElementById("gameWaitingModalDescription").innerText =
-    firstMatch + "<br />" + secondMatch;
+
+  const description = document.getElementById("gameWaitingModalDescription");
+  description.innerText = firstMatch + "\n" + secondMatch;
 };

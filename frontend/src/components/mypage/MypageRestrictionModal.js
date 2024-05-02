@@ -15,7 +15,7 @@ export default class MypageRestrictionModal extends Component {
             <h1 class="modal-title fs-3 p-3 nanum-gothic-bold" id="staticBackdropLabel">${mypageButton[languageId].alert}</h1>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal" id="loginFirstButton">${mypageButton[languageId].confirm}</button>
+            <button type="button" class="btn btn-outline-dark btn-lg" id="mypageLoginFirstButton">${mypageButton[languageId].confirm}</button>
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@ export default class MypageRestrictionModal extends Component {
   }
 
   setEvent() {
-    this.addEvent("click", "#loginFirstButton", () => {
+    this.addEvent("click", "#mypageLoginFirstButton", () => {
       router.push("/login");
     });
   }

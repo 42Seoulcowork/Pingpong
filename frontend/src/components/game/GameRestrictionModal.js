@@ -15,7 +15,7 @@ export default class GameRestrictionModal extends Component {
             <h1 class="modal-title fs-3 p-3 nanum-gothic-bold">${gameSettingCard[languageId].unprepared}</h1>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal" id="unpreparedButton">${gameSettingCard[languageId].confirm}</button>
+            <button type="button" class="btn btn-outline-dark btn-lg" id="unpreparedButton">${gameSettingCard[languageId].confirm}</button>
           </div>
         </div>
       </div>

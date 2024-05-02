@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
-import { socketHandler } from "./gameEventHandler.js";
+
 import { getState } from "../../state/store.js";
 
 const paddle = (position_x, position_z, color) => {
@@ -17,7 +17,7 @@ const paddle = (position_x, position_z, color) => {
   return pad;
 };
 
-export const pingpong = (gameMode) => {
+export const pingpong = () => {
   try {
     // WEBGL 호환성 확인
     if (WebGL.isWebGLAvailable() === false) throw new Error("WebGL Error");
@@ -120,7 +120,13 @@ export const pingpong = (gameMode) => {
       renderer.render(scene, camera);
     }
 
-    socketHandler(animate, ball, paddle1, paddle2, gameMode);
+    function objectsMovement(ballPosition, player1Position, player2Position) {
+      ball.position.fromArray(ballPosition);
+      paddle1.position.fromArray(player1Position);
+      paddle2.position.fromArray(player2Position);
+    }
+
+    return [animate, objectsMovement];
   } catch (e) {
     console.log(e);
     const warning = WebGL.getWebGLErrorMessage();
