@@ -150,9 +150,12 @@ class RemoteGameConsumer(LocalGameConsumer):
 
     async def send_periodic_message(self):
         while True:
+            if self.game.status == 'end':
+                return
             if self.game.update() == GAME_OVER:
                 await self.send_game_over()
                 await self.save_game_result()
+                self.game.status = 'end'
                 return
 
             await self.send_game_data(self.game.info())
@@ -177,7 +180,11 @@ class TournamentGameConsumer(RemoteGameConsumer):
 
         # 비정상적으로 토너먼트 라운드가 종료되었을 때
         if hasattr(self, 'round') and self.round.status == 'playing':
-            self.round.status = 'error'
+            for round in self.round_list:
+                round.status = 'end'
+                if round != self.round:
+                    await round.consumer1.send_json({'gameOver': 'disconnected'})
+                    await round.consumer2.send_json({'gameOver': 'disconnected'})
 
         # 다음 경기 대기 중에 연결이 끊어졌을 때
         if hasattr(self, 'final_player_list') and self in self.final_player_list:
@@ -186,9 +193,9 @@ class TournamentGameConsumer(RemoteGameConsumer):
 
         await self.close()
 
-    async def make_round(self, opponent, number):
+    async def make_round(self, opponent):
         await self.make_game(opponent)
-        self.round = Round(self, self.opponent, number)
+        self.round = Round(self.opponent, self)
         self.opponent.round = self.round
         return self.round
 
@@ -208,8 +215,8 @@ class TournamentGameConsumer(RemoteGameConsumer):
                 self.wait_player_list.append(self)
                 return
             
-            round1 = await self.make_round(self.wait_player_list.pop(), 0)
-            round2 = await self.wait_player_list.pop().make_round(self.wait_player_list.pop(), 1)
+            round2 = await self.make_round(self.wait_player_list.pop())
+            round1 = await self.wait_player_list.pop().make_round(self.wait_player_list.pop())
             
             round_list = [round1, round2]
             round1.consumer1.round_list = round_list
@@ -237,16 +244,10 @@ class TournamentGameConsumer(RemoteGameConsumer):
         await self.round.winner.send_json({'gameOver': 'final'})
         await self.round.loser.send_json(self.game.finish_info())
 
-        if round_list[0].winner != None and round_list[1].winner != None:
-            if round_list[0].status == 'error':
-                await round_list[1].winner.send_json({'gameOver': 'disconnected'})
-                return
-
-            if round_list[1].status == 'error':
-                await round_list[0].winner.send_json({'gameOver': 'disconnected'})
-                return
-
+        if round_list[0].status == 'end' and round_list[1].status == 'end':
             final_player_list = [round_list[0].winner, round_list[1].winner]
+            round_list[0].winner.opponent = round_list[1].winner
+            round_list[1].winner.opponent = round_list[0].winner
             final_wait_list = []
             for round in round_list:
                 await round.winner.send_json(
