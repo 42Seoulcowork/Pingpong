@@ -18,6 +18,7 @@ import {
 let socket;
 let allowedKeys;
 let pauseFlag;
+let waitModalFlag;
 
 export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
   const languageId = getState().languageId;
@@ -59,6 +60,7 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
       closeModal();
+      waitModalFlag = false;
       if (data.nickname) {
         nicknameHandler(data.nickname[0], data.nickname[1]);
       } else {
@@ -81,6 +83,7 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
         if (data.round === undefined) {
           gameWaitingModalDescriptionUpdate(gameOver[languageId].final);
           openModal();
+          waitModalFlag = true;
         } else {
           gameResultsUpdate(data.round, languageId);
           const readyButton = document.getElementById("gameWaitingReadyButton");
@@ -90,6 +93,7 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
         return;
       }
       dispatch("endReason", data.gameOver);
+      if (waitModalFlag) closeModal();
       modalInit("gameOverModal", ["gameOverButton"]);
       socket.close();
       return;
