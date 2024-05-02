@@ -13,6 +13,7 @@ COPY ./nginx.conf /etc/nginx/http.d/default.conf
 
 WORKDIR /app
 
+COPY .env /app/.env
 COPY index.html /app/index.html
 COPY ./public /app/public
 
@@ -28,9 +29,6 @@ RUN npm run build
 RUN mv /app/dist/* /var/www/
 
 EXPOSE 443 80
-
-ENV OAUTH_URL_1 https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-d0bd53596b0472573a9e8d5e9a0dba82c42e37b87d5616fb8264083eed3548c7&redirect_uri=https%3A%2F%2F
-ENV OAUTH_URL_2 %2Fapi%2Foauth&response_type=code
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "nginx", "-g", "daemon off;"]
 
