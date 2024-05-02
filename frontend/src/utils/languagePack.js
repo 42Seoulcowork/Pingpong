@@ -56,14 +56,17 @@ export const logoutButton = {
   en: {
     logoutDescription: "Logout",
     logoutRestriction: "Logout failed",
+    confirm: "Confirm",
   },
   ko: {
     logoutDescription: "로그아웃",
     logoutRestriction: "로그아웃 실패",
+    confirm: "확인",
   },
   fr: {
     logoutDescription: "Déconnexion",
     logoutRestriction: "Déconnexion échouée",
+    confirm: "Confirmer",
   },
 };
 
@@ -182,7 +185,8 @@ export const gameSettingCard = {
     start: "Start",
     unprepared: "Please start in the normal way.",
     confirm: "Confirm",
-    specialCharacter: "Special characters and empty nicknames cannot be used.",
+    specialCharacter:
+      "Special characters, blank characters, and empty nicknames are not allowed.",
   },
   ko: {
     setting: "PINGPONG 설정",
@@ -201,7 +205,8 @@ export const gameSettingCard = {
     start: "시작",
     unprepared: "정상적인 방법으로 시작해주세요.",
     confirm: "확인",
-    specialCharacter: "특수문자와 비어있는 닉네임은 사용할 수 없습니다.",
+    specialCharacter:
+      "특수문자와 공백문자, 비어있는 닉네임은 사용할 수 없습니다.",
   },
   fr: {
     setting: "Réglage de PINGPONG",
@@ -221,7 +226,7 @@ export const gameSettingCard = {
     unprepared: "Veuillez démarrer de manière normale.",
     confirm: "Confirmer",
     specialCharacter:
-      "Les caractères spéciaux et les pseudonymes vides ne peuvent pas être utilisés.",
+      "Les caractères spéciaux, les espaces et les pseudos vides ne sont pas autorisés.",
   },
 };
 

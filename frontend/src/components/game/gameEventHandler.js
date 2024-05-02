@@ -1,19 +1,15 @@
 import { dispatch, getState } from "../../state/store.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import {
   gameOver,
   gameBoard,
   gameWaitingModal,
 } from "../../utils/languagePack.js";
 import {
-  gameWaitingModalShow,
-  gameWaitingModalHide,
-  gameOverModalInit,
-  gameWaitingReadyButtonShow,
-  gameWaitingButtonShow,
-} from "./gameModalHandler.js";
-import {
   scoreHandler,
   nicknameHandler,
+  gameWaitingReadyButtonShow,
+  gameWaitingButtonShow,
   gameOverDescriptionUpdate,
   gameResultsUpdate,
   gameWaitingModalDescriptionUpdate,
@@ -22,27 +18,24 @@ import {
 let socket;
 let allowedKeys;
 let pauseFlag;
+let waitModalFlag;
 
-function closeSocket() {
-  if (socket && socket.readyState <= 1) {
-    socket.close();
-  }
-}
-
-export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
-  pauseFlag = true;
+export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
   const languageId = getState().languageId;
+  const gameMode = getState().gameMode;
+
+  pauseFlag = true;
 
   const SERVER_URL = window.location.hostname;
   const webSocketURL = "wss://" + SERVER_URL + "/ws/" + gameMode + "/";
   socket = new WebSocket(webSocketURL);
-  window.addEventListener("popstate", closeSocket, { once: true });
-  const child = document.querySelector("#gameWaitingButton");
+  window.addEventListener("popstate", closeSocket);
+  const child = document.querySelector("#gameWaitingCloseButton");
   child.addEventListener("click", closeSocket);
 
   socket.onopen = () => {
     console.log("WebSocket connection opened");
-    socketOpenCallback();
+    animate();
     let message = {
       ready: true,
       difficulty: getState().difficulty,
@@ -66,7 +59,8 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
 
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
-      gameWaitingModalHide();
+      closeModal();
+      waitModalFlag = false;
       if (data.nickname) {
         nicknameHandler(data.nickname[0], data.nickname[1]);
       } else {
@@ -88,27 +82,24 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
       else if (data.gameOver === "final") {
         if (data.round === undefined) {
           gameWaitingModalDescriptionUpdate(gameOver[languageId].final);
-          gameWaitingModalShow();
+          openModal();
+          waitModalFlag = true;
         } else {
-          gameResultsUpdate(data.round);
+          gameResultsUpdate(data.round, languageId);
           const readyButton = document.getElementById("gameWaitingReadyButton");
-          readyButton.addEventListener("click", readyButtonHandler, {
-            once: true,
-          });
+          readyButton.addEventListener("click", readyHandler, { once: true });
           gameWaitingReadyButtonShow();
         }
         return;
       }
       dispatch("endReason", data.gameOver);
-      gameOverModalInit();
+      if (waitModalFlag) closeModal();
+      modalInit("gameOverModal", ["gameOverButton"]);
       socket.close();
       return;
     }
 
-    ball.position.fromArray(data.ball);
-    p1.position.fromArray(data.p1);
-    p2.position.fromArray(data.p2);
-
+    moveFunction(data.ball, data.p1, data.p2);
     scoreHandler(data.score[0], data.score[1]);
 
     console.log("Received data:", data);
@@ -117,10 +108,17 @@ export const socketHandler = (socketOpenCallback, ball, p1, p2, gameMode) => {
   socket.onclose = () => {
     console.log("WebSocket connection closed");
     pauseFlag = true;
+    window.removeEventListener("popstate", closeSocket);
     document.removeEventListener("keydown", keydownHandler);
     document.removeEventListener("keyup", keyupHandler);
   };
 };
+
+function closeSocket() {
+  if (socket && socket.readyState <= 1) {
+    socket.close();
+  }
+}
 
 const keydownHandler = (event) => {
   const keydown = event.key;
@@ -159,7 +157,7 @@ const keyEventHandler = (gameMode) => {
   document.addEventListener("keyup", keyupHandler);
 };
 
-const readyButtonHandler = () => {
+const readyHandler = () => {
   socket.send(
     JSON.stringify({
       final: true,

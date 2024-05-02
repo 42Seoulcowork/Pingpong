@@ -1,15 +1,15 @@
 import Component from "../Component.js";
 import { router } from "../../utils/Router.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import { dispatch, getState } from "../../state/store.js";
 import { gameSettingCard } from "../../utils/languagePack.js";
-import * as bootstrap from "bootstrap";
 
 export default class GameSettingModal extends Component {
   template() {
     const languageId = getState().languageId;
 
     return `
-    <div class="modal fade" id="gameSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal" id="gameSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -85,21 +85,21 @@ export default class GameSettingModal extends Component {
               </div>        
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-outline-info px-4" data-bs-dismiss="modal" id="gamebutton">${gameSettingCard[languageId].start}</button>
-              <button type="button" class="btn btn-outline-warning px-4" data-bs-dismiss="modal">${gameSettingCard[languageId].close}</button>
+            <button type="button" class="btn btn-outline-secondary px-4" id="gameSettingClosebutton">${gameSettingCard[languageId].close}</button>
+              <button type="submit" class="btn btn-outline-info px-4" id="gameStartbutton">${gameSettingCard[languageId].start}</button>
             </div>
           </form>
         </div>
       </div>
     </div>
-    <div class="modal fade" id="specialCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal" id="specialCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-3 p-3 nanum-gothic-bold">${gameSettingCard[languageId].specialCharacter}</h1>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal">${gameSettingCard[languageId].confirm}</button>
+            <button type="button" class="btn btn-outline-dark px-4" id="specialCharacterModalCloseButton">${gameSettingCard[languageId].close}</button>
           </div>
         </div>
       </div>
@@ -109,6 +109,10 @@ export default class GameSettingModal extends Component {
 
   setEvent() {
     const form = this.target.querySelector("#gameSettingForm");
+
+    this.addEvent("click", "#gameSettingClosebutton", () => {
+      form.reset();
+    });
 
     this.addEvent("submit", "#gameSettingForm", (event) => {
       event.preventDefault();
@@ -121,9 +125,9 @@ export default class GameSettingModal extends Component {
         const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
         const nickname = formData.get("nickname");
         if (nickname === "" || regExp.test(nickname)) {
-          const $special = document.getElementById("specialCharacterModal");
-          const modal = new bootstrap.Modal($special);
-          modal.show();
+          modalInit("specialCharacterModal", [
+            "specialCharacterModalCloseButton",
+          ]);
           return;
         }
       }

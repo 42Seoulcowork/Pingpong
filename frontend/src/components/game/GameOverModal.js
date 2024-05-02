@@ -8,7 +8,7 @@ export default class GameOverModal extends Component {
     const languageId = getState().languageId;
 
     return `
-    <div class="modal fade" id="gameOverModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal" id="gameOverModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -18,7 +18,7 @@ export default class GameOverModal extends Component {
             <p class="fs-3 p-2 m-1" id="gameOverDescription">${gameOver[languageId].left}</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark btn-lg" data-bs-dismiss="modal" id="gameOverButton">${gameOver[languageId].closeButton}</button>
+            <button type="button" class="btn btn-outline-dark btn-lg" id="gameOverButton">${gameOver[languageId].closeButton}</button>
           </div>
         </div>
       </div>

@@ -2,21 +2,20 @@ import Component from "../Component.js";
 import GameRestrictionModal from "./GameRestrictionModal.js";
 import GameWaitingModal from "./GameWaitingModal.js";
 import GameOverModal from "./GameOverModal.js";
-import { gameWaitingModalInit } from "./gameModalHandler.js";
 import { pingpong } from "./pingpong.js";
+import { socketHandler } from "./gameEventHandler.js";
 import { gameBoard } from "../../utils/languagePack.js";
 import { router } from "../../utils/Router.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import { getState, dispatch } from "../../state/store.js";
-import * as bootstrap from "bootstrap";
 
 export default class Game extends Component {
   didMount() {
     if (getState().newGame === false) {
       const $gameRestriction = document.getElementById("gameRestriction");
       new GameRestrictionModal($gameRestriction, this.state);
+      modalInit("gameRestrictionModal", ["unpreparedButton"]);
 
-      const modal = new bootstrap.Modal("#gameRestrictionModal");
-      modal.show();
       throw "PassThrough";
     }
 
@@ -28,7 +27,6 @@ export default class Game extends Component {
 
     const $gameWaiting = document.getElementById("gameWaiting");
     new GameWaitingModal($gameWaiting, this.state);
-    gameWaitingModalInit();
 
     const $gameOver = document.getElementById("gameOver");
     new GameOverModal($gameOver, this.state);
@@ -74,9 +72,12 @@ export default class Game extends Component {
   }
 
   setEvent() {
-    const gameMode = getState().gameMode;
-    pingpong(gameMode);
+    const [openModal, closeModal] = modalInit("gameWaitingModal", [
+      "gameWaitingCloseButton",
+    ]);
+    const [animate, objectsMovement] = pingpong();
 
+    socketHandler(animate, objectsMovement, openModal, closeModal);
     dispatch("newGame", false);
   }
 }
