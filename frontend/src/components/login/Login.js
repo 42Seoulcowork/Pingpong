@@ -18,10 +18,7 @@ export default class Login extends Component {
     const languageId = getState().languageId;
     const SERVER_URL = window.location.hostname;
     const OAuth_URL =
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b8ee714debb1a7c3febef1c78bc4eacb56043624455068279b88fe88c991c42e&redirect_uri=https%3A%2F%2F" +
-      SERVER_URL +
-      "%2Fapi%2Foauth&response_type=code";
-
+      import.meta.env.OAUTH_URL_1 + SERVER_URL + import.meta.env.OAUTH_URL_2;
     const loginStatus = getState().isLoggedIn;
     if (loginStatus === true) {
       router.push("/");
