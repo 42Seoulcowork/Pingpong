@@ -2,6 +2,7 @@ import Component from "../Component.js";
 import logoutRestrictionModal from "./logoutRestrictionModal.js";
 import { router } from "../../utils/Router.js";
 import { logout } from "../../utils/apiHandler.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import { dispatch, getState } from "../../state/store.js";
 import {
   mypageButton,
@@ -16,6 +17,10 @@ export default class Header extends Component {
       const logoutHeader = document.querySelector("#logoutHeader");
       logoutHeader.hidden = false;
     }
+
+    const $logoutRestrictionModal =
+      this.target.querySelector("#logoutRestriction");
+    new logoutRestrictionModal($logoutRestrictionModal, this.state);
   }
 
   template() {
@@ -43,7 +48,7 @@ export default class Header extends Component {
         </div>
       </div>
     </nav>
-    <div id="logoutRestrictionModal"></div>
+    <div id="logoutRestriction"></div>
     `;
   }
 
@@ -68,13 +73,7 @@ export default class Header extends Component {
           router.push("/login");
         },
         () => {
-          const $logoutRestrictionModal = this.target.querySelector(
-            "#logoutRestrictionModal"
-          );
-          new logoutRestrictionModal($logoutRestrictionModal, this.state);
-
-          const modal = new bootstrap.Modal("#logoutRestrictionModal");
-          modal.show();
+          modalInit("logoutRestrictionModal", ["logoutFailedButton"]);
         }
       );
     });

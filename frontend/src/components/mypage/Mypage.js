@@ -3,8 +3,8 @@ import Header from "../header/Header.js";
 import MypageHTML from "./MypageHTML.js";
 import MypageRestrictionModal from "./MypageRestrictionModal.js";
 import { getProfileInfo } from "../../utils/apiHandler.js";
+import { modalInit } from "../../utils/modalHandler.js";
 import { dispatch, getState } from "../../state/store.js";
-import * as bootstrap from "bootstrap";
 
 export default class Mypage extends Component {
   didMount() {
@@ -26,20 +26,15 @@ export default class Mypage extends Component {
           new MypageHTML($mypage, this.state);
         },
         () => {
-          console.log("Failed to get profile info");
           const $mypageModal = this.target.querySelector("#mypageRestriction");
           new MypageRestrictionModal($mypageModal, this.state);
-
-          const modal = new bootstrap.Modal("#mypageRestrictionModal");
-          modal.show();
+          modalInit("mypageRestrictionModal", ["loginFirstButton"], []);
         }
       );
     } else {
       const $mypageModal = this.target.querySelector("#mypageRestriction");
       new MypageRestrictionModal($mypageModal, this.state);
-
-      const modal = new bootstrap.Modal("#mypageRestrictionModal");
-      modal.show();
+      modalInit("mypageRestrictionModal", ["mypageLoginFirstButton"]);
     }
   }
 
