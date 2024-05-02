@@ -52,11 +52,18 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
             if not await self.check_game_status():
                 return
 
-            self.p1 = Player(content['p1'])
+            if 'difficulty' in content and content['difficulty'] == 'hard':
+                player_speed = 1.5
+                ball_speed = 1
+            else:
+                player_speed = 1
+                ball_speed = 0.5
+
+            self.p1 = Player(content['p1'], player_speed)
             self.p1.set_pos(1)
-            self.p2 = Player(content['p2'])
+            self.p2 = Player(content['p2'], player_speed)
             self.p2.set_pos(2)
-            self.game = Game(self.p1, self.p2)
+            self.game = Game(self.p1, self.p2, ball_speed)
             await self.setGameStatus(True)
             asyncio.ensure_future(self.send_periodic_message())
         else:
@@ -80,6 +87,7 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
 
 class RemoteGameConsumer(LocalGameConsumer):
     wait_player_list = []
+    hard_wait_player_list = []
 
     @database_sync_to_async
     def addWin(self):
@@ -97,6 +105,9 @@ class RemoteGameConsumer(LocalGameConsumer):
 
         if self in self.wait_player_list:
             self.wait_player_list.remove(self)
+        
+        if self in self.hard_wait_player_list:
+            self.hard_wait_player_list.remove(self)
 
         # 게임 시작 후 연결이 끊겼을 때 상대방에게 연결이 끊겼다고 알림
         if hasattr(self, 'game') and self.game.status == 'playing':
@@ -105,14 +116,23 @@ class RemoteGameConsumer(LocalGameConsumer):
 
         await self.close()
 
-    async def make_game(self, opponent):
+    async def make_game(self, opponent, speed):
         self.opponent = opponent
         self.opponent.opponent = self
         self.opponent.player.set_pos(1)
         self.player.set_pos(2)
-        self.game = Game(self.opponent.player, self.player)
+        self.game = Game(self.opponent.player, self.player, speed)
         self.opponent.game = self.game
         asyncio.ensure_future(self.send_periodic_message())
+
+    async def participate_game(self, wait_player_list):
+        self.player = Player(self.nickname, self.player_speed)
+        await self.setGameStatus(True)
+        if len(wait_player_list) < 1:
+            wait_player_list.append(self)
+            return
+
+        await self.make_game(wait_player_list.pop(), self.ball_speed)
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
@@ -122,14 +142,19 @@ class RemoteGameConsumer(LocalGameConsumer):
             if not await self.check_game_status():
                 return
 
-            self.player = Player(content['nickname'])
-            await self.setGameStatus(True)
-        
-            if len(self.wait_player_list) < 1:
-                self.wait_player_list.append(self)
+            if 'nickname' not in content:
+                await self.send_json({'gameOver': 'no nickname'})
                 return
 
-            await self.make_game(self.wait_player_list.pop())
+            self.nickname = content['nickname']
+            if 'difficulty' in content and content['difficulty'] == 'hard':
+                self.ball_speed = 1
+                self.player_speed = 1.5
+                await self.participate_game(self.hard_wait_player_list)
+            else:
+                self.ball_speed = 0.5
+                self.player_speed = 1
+                await self.participate_game(self.wait_player_list)
 
         else:
             if 'ArrowUp' in content:
@@ -173,6 +198,9 @@ class TournamentGameConsumer(RemoteGameConsumer):
         if self in self.wait_player_list:
             self.wait_player_list.remove(self)
 
+        if self in self.hard_wait_player_list:
+            self.hard_wait_player_list.remove(self)
+
         # 연결이 끊겼을 때 상대방에게 연결이 끊겼다고 알림
         if hasattr(self, 'game') and self.game.status == 'playing':
             await self.opponent.send_json({ 'gameOver': 'disconnected'})
@@ -194,10 +222,27 @@ class TournamentGameConsumer(RemoteGameConsumer):
         await self.close()
 
     async def make_round(self, opponent):
-        await self.make_game(opponent)
+        await self.make_game(opponent, self.ball_speed)
         self.round = Round(self.opponent, self)
         self.opponent.round = self.round
         return self.round
+
+    async def participate_game(self, wait_player_list):
+        self.player = Player(self.nickname, self.player_speed)
+        self.is_final_game = False
+        await self.setGameStatus(True)
+        if len(wait_player_list) < 3:
+            wait_player_list.append(self)
+            return
+
+        round2 = await self.make_round(wait_player_list.pop())
+        round1 = await wait_player_list.pop().make_round(wait_player_list.pop())
+
+        round_list = [round1, round2]
+        round1.consumer1.round_list = round_list
+        round1.consumer2.round_list = round_list
+        round2.consumer1.round_list = round_list
+        round2.consumer2.round_list = round_list
 
     async def receive_json(self, content, **kwargs):
         if 'ready' in content:
@@ -207,29 +252,26 @@ class TournamentGameConsumer(RemoteGameConsumer):
             if not await self.check_game_status():
                 return
 
-            self.player = Player(content['nickname'])
-            self.is_final_game = False
-            await self.setGameStatus(True)
-            
-            if len(self.wait_player_list) < 3:
-                self.wait_player_list.append(self)
+            if 'nickname' not in content:
+                await self.send_json({'gameOver': 'no nickname'})
                 return
             
-            round2 = await self.make_round(self.wait_player_list.pop())
-            round1 = await self.wait_player_list.pop().make_round(self.wait_player_list.pop())
-            
-            round_list = [round1, round2]
-            round1.consumer1.round_list = round_list
-            round1.consumer2.round_list = round_list
-            round2.consumer1.round_list = round_list
-            round2.consumer2.round_list = round_list
+            self.nickname = content['nickname']
+            if 'difficulty' in content and content['difficulty'] == 'hard':
+                self.ball_speed = 1
+                self.player_speed = 1.5
+                await self.participate_game(self.hard_wait_player_list)
+            else:
+                self.ball_speed = 0.5
+                self.player_speed = 1
+                await self.participate_game(self.wait_player_list)
 
         elif 'final' in content:
             if hasattr(self, 'final_player_list') and self in self.final_player_list:
 
                 self.is_final_game = True
                 if len(self.final_wait_list) == 1:
-                    await self.final_player_list[0].make_game(self.final_player_list[1])
+                    await self.final_player_list[0].make_game(self.final_player_list[1], self.ball_speed)
                 else:
                     self.final_wait_list.append(self)
 
