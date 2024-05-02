@@ -19,9 +19,8 @@ class Ball:
         else:
             self.pos[Y] = abs(5 * math.cos(math.pi / 24 * (self.pos[X] - 5))) + 1
 
-    def update(self, speed, dir):
+    def update(self, dir):
         self.pos = [-2 * dir[X], abs(5 * math.cos(math.pi / 24 * (-2 * dir[X] + 5))) + 1, -2 * dir[Z]]
-        self.speed = speed
         self.dir = dir
         self.init = 0
 
