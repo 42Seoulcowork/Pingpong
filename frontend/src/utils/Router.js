@@ -1,4 +1,3 @@
-import Component from "../components/Component.js";
 import { customEventEmitter } from "./helpers.js";
 
 class Router {
