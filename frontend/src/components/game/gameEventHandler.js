@@ -1,5 +1,6 @@
 import { dispatch, getState } from "../../state/store.js";
 import { modalInit } from "../../utils/modalHandler.js";
+import { animate, setPos, resizePong, removeResizePong } from "./pingpong.js";
 import {
   gameOver,
   gameBoard,
@@ -20,7 +21,7 @@ let allowedKeys;
 let pauseFlag;
 let waitModalFlag;
 
-export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
+export const socketHandler = (openModal, closeModal) => {
   const languageId = getState().languageId;
   const gameMode = getState().gameMode;
 
@@ -36,6 +37,8 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
   socket.onopen = () => {
     console.log("WebSocket connection opened");
     animate();
+    window.addEventListener("resize", resizePong);
+    window.addEventListener("popstate", removeResizePong);
     let message = {
       ready: true,
       difficulty: getState().difficulty,
@@ -55,7 +58,7 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log(event.data);
+    // console.log(event.data);
 
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
@@ -94,15 +97,16 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
       }
       dispatch("endReason", data.gameOver);
       if (waitModalFlag) closeModal();
+      removeResizePong();
       modalInit("gameOverModal", ["gameOverButton"]);
       socket.close();
       return;
     }
 
-    moveFunction(data.ball, data.p1, data.p2);
+    setPos(data.ball, data.p1, data.p2);
     scoreHandler(data.score[0], data.score[1]);
 
-    console.log("Received data:", data);
+    // console.log("Received data:", data);
   };
 
   socket.onclose = () => {

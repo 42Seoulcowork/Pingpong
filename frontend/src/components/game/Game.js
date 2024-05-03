@@ -75,9 +75,9 @@ export default class Game extends Component {
     const [openModal, closeModal] = modalInit("gameWaitingModal", [
       "gameWaitingCloseButton",
     ]);
-    const [animate, objectsMovement] = pingpong();
 
-    socketHandler(animate, objectsMovement, openModal, closeModal);
+    pingpong();
+    socketHandler(openModal, closeModal);
     dispatch("newGame", false);
   }
 }

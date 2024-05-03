@@ -37,6 +37,8 @@ class Router {
   }
 
   onRoutePopHandler(event) {
+    if (event.state === null) return;
+
     const path = event.state.path;
     const element = event.state.element;
 
