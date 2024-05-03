@@ -34,7 +34,11 @@ export const pingpong = () => {
     const NEAR = 1; // 렌더링 할 물체 거리의 하한값, 카메라로부터 거리가 이 값보다 작은 물체는 화면에 그리지 않음 0보다 크고 FAR보다 작은 값을 가질 수 있다.
     const FAR = 10000; // 렌더링 할 물체 거리의 상한값, 너무 멀리 있는 물체를 그리지 않는 것, 카메라로부터 거리가 이 값보다 큰 물체는 화면에 그리지 않음
     camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
-    camera.position.set(0, 15, 35); // 0 40, 0 // 0 15 35
+    camera.position.set(
+      0,
+      -0.01875 * WIDTH + 40.3125,
+      -0.04375 * WIDTH + 94.0625
+    );
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // 광원
@@ -130,7 +134,12 @@ export function resizePong() {
   const height = window.innerHeight;
   console.log("resizePong", width, height);
 
-  camera.aspect = width / height; // 1) camera 종횡비 업데이트
+  camera.aspect = width / height; // 1) camera 종횡비, 포지션 업데이트
+  camera.position.set(
+    0,
+    -0.01875 * width + 40.3125,
+    -0.04375 * width + 94.0625
+  );
   camera.updateProjectionMatrix(); // 2) 카메라의 프로젝션 매트릭스 업데이트
 
   renderer.setSize(width, height); // 3) renderer 사이즈 업데이트
