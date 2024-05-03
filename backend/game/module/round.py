@@ -2,7 +2,6 @@ class Round():
     def __init__(self, consumer1, consumer2):
         self.consumer1 = consumer1
         self.consumer2 = consumer2
-        self.status = 'playing'
         self.winner = None
         self.loser = None
 
