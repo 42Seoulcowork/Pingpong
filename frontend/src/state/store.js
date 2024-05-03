@@ -47,7 +47,7 @@ function reducer(store, action, newState) {
     newStore[action] = newState;
     return newStore;
   } else {
-    console.log("Invalid action");
+    console.error("Invalid action");
     return "";
   }
 }

@@ -16,6 +16,11 @@ import {
   gameWaitingModalDescriptionUpdate,
 } from "./gameHTMLHandler.js";
 import MusicPlayer from "../../utils/Audio.js";
+import easyMusicURL from "../../../public/easy.mp3";
+import hardMusicURL from "../../../public/hard.mp3";
+import winMusicURL from "../../../public/win.mp3";
+import loseMusicURL from "../../../public/lose.mp3";
+import localMusicURL from "../../../public/local.mp3";
 
 let socket;
 let allowedKeys;
@@ -36,11 +41,10 @@ export const socketHandler = (openModal, closeModal) => {
   child.addEventListener("click", closeSocket);
 
   const musicPath =
-    getState().difficulty === "easy" ? "/easy.mp3" : "/hard.mp3";
+    getState().difficulty === "easy" ? easyMusicURL : hardMusicURL;
   const musicPlayer = new MusicPlayer(musicPath);
 
   socket.onopen = () => {
-    console.log("WebSocket connection opened");
     animate();
     musicPlayer.playMusic();
 
@@ -60,12 +64,11 @@ export const socketHandler = (openModal, closeModal) => {
   };
 
   socket.onerror = (event) => {
-    console.log(event);
+    console.error(event);
   };
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    // console.log(event.data);
 
     if (pauseFlag === true) {
       keyEventHandler(gameMode);
@@ -104,9 +107,10 @@ export const socketHandler = (openModal, closeModal) => {
       }
       dispatch("endReason", data.gameOver);
       musicPlayer.stopMusic();
-      let effect = "/local.mp3";
+      let effect = localMusicURL;
       if (gameMode !== "local") {
-        effect = getState().nickname === data.winner ? "/win.mp3" : "/lose.mp3";
+        effect =
+          getState().nickname === data.winner ? winMusicURL : loseMusicURL;
       }
       musicPlayer.playSoundEffect(effect);
       if (waitModalFlag) closeModal();
@@ -118,12 +122,9 @@ export const socketHandler = (openModal, closeModal) => {
 
     setPos(data.ball, data.p1, data.p2);
     scoreHandler(data.score[0], data.score[1]);
-
-    // console.log("Received data:", data);
   };
 
   socket.onclose = () => {
-    console.log("WebSocket connection closed");
     pauseFlag = true;
     window.removeEventListener("popstate", closeSocket);
     document.removeEventListener("keydown", keydownHandler);
