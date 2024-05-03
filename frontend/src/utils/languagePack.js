@@ -133,6 +133,8 @@ export const mypageCard = {
 export const gameModeCard = {
   en: {
     play: "PINGPONG with various modes",
+    description:
+      "Basic control is up and down arrow keys, and an additional local player uses W and S.",
     Local: "Local",
     LocalDescription: "Two people playing a game on one computer together.",
     Remote: "Remote",
@@ -144,6 +146,8 @@ export const gameModeCard = {
   },
   ko: {
     play: "다양한 모드로 PINGPONG",
+    description:
+      "기본적으로 방향키 위, 아래로 조작하며, 로컬 추가 1인은 W, S로 조작합니다.",
     Local: "로컬",
     LocalDescription: "한 컴퓨터에서 두 명이 게임을 하는 모드입니다.",
     Remote: "리모트",
@@ -154,6 +158,8 @@ export const gameModeCard = {
   },
   fr: {
     play: "PINGPONG avec différents modes",
+    description:
+      "Le contrôle de base se fait avec les touches fléchées haut et bas, et un joueur supplémentaire utilise W et S.",
     Local: "Local",
     LocalDescription:
       "Deux personnes jouent à un jeu sur un ordinateur ensemble.",
