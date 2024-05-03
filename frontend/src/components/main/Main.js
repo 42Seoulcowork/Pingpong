@@ -49,6 +49,7 @@ export default class Main extends Component {
           <h2 class="mb-4 fs-1 nanum-gothic-bold">
             ${gameModeCard[languageId].play}
           </h2>
+          <p>${gameModeCard[languageId].description}</p>
           <div class="row justify-content-center">
             <div class="card m-2" style="width: 15rem">
               <div class="card-body">

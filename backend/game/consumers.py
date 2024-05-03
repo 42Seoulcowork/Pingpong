@@ -78,11 +78,14 @@ class LocalGameConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_periodic_message(self):
         while True:
-            if self.game.update() == GAME_OVER:
-                await self.send_json(self.game.finish_info())
+            try:
+                if self.game.update() == GAME_OVER:
+                    await self.send_json(self.game.finish_info())
+                    return
+                await self.send_json(self.game.info())
+                await asyncio.sleep(1 / 30)
+            except:
                 return
-            await self.send_json(self.game.info())
-            await asyncio.sleep(1 / 30)
 
 class RemoteGameConsumer(LocalGameConsumer):
     wait_player_list = []
@@ -281,6 +284,7 @@ class TournamentGameConsumer(RemoteGameConsumer):
                 self.is_final_game = True
                 self.final_wait_list.append(self)
                 if len(self.final_wait_list) == 2:
+                    await self.round_list[0].winner.make_game(self.round_list[1].winner, self.ball_speed)
                     await self.game_start()
         else:
             if 'ArrowUp' in content:
@@ -294,7 +298,6 @@ class TournamentGameConsumer(RemoteGameConsumer):
         await self.round.loser.send_json(self.game.finish_info())
 
         if round_list[0].winner != None and round_list[1].winner != None:
-            await round_list[0].winner.make_game(round_list[1].winner, self.ball_speed)
             final_wait_list = []
             for round in round_list:
                 await round.winner.send_json(
