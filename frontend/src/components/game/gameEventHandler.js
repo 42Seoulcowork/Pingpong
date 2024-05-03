@@ -104,12 +104,11 @@ export const socketHandler = (openModal, closeModal) => {
       }
       dispatch("endReason", data.gameOver);
       musicPlayer.stopMusic();
+      let effect = "/local.mp3";
       if (gameMode !== "local") {
-        const effect =
-          getState().nickname === data.winner ? "/win.mp3" : "/lose.mp3";
-        musicPlayer.playSoundEffect(effect);
-        console.log(effect);
+        effect = getState().nickname === data.winner ? "/win.mp3" : "/lose.mp3";
       }
+      musicPlayer.playSoundEffect(effect);
       if (waitModalFlag) closeModal();
       removeResizePong();
       modalInit("gameOverModal", ["gameOverButton"]);
