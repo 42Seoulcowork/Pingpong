@@ -112,7 +112,10 @@ class RemoteGameConsumer(LocalGameConsumer):
         if hasattr(self, 'game') and self.status == 'playing':
             self.status = 'end'
             self.opponent.status = 'end'
-            await self.opponent.send_json({ 'gameOver': 'disconnected'})
+            try:
+                await self.send_json({ 'gameOver': 'disconnected'})
+            except:
+                pass
 
         await self.close()
 
@@ -179,15 +182,19 @@ class RemoteGameConsumer(LocalGameConsumer):
         else:
             await self.addLose()
             await self.opponent.addWin()
+
     async def send_periodic_message(self):
         while True:
-            if self.game.update() == GAME_OVER:
-                await self.send_game_over()
-                await self.save_game_result()
-                return
+            try:
+                if self.game.update() == GAME_OVER:
+                    await self.send_game_over()
+                    await self.save_game_result()
+                    return
 
-            await self.send_game_data(self.game.info())
-            await asyncio.sleep(1 / 30)
+                await self.send_game_data(self.game.info())
+                await asyncio.sleep(1 / 30)
+            except:
+                return
 
     async def send_game_data(self, data):
         await self.send_json(data)
@@ -210,10 +217,16 @@ class TournamentGameConsumer(RemoteGameConsumer):
             for round in self.round_list:
                 if round.consumer1.status == 'playing':
                     round.consumer1.status = 'end'
-                    await round.consumer1.send_json({ 'gameOver': 'disconnected'})
+                    try:
+                        await round.consumer1.send_json({ 'gameOver': 'disconnected'})
+                    except:
+                        pass
                 if round.consumer2.status == 'playing':
                     round.consumer2.status = 'end'
-                    await round.consumer2.send_json({ 'gameOver': 'disconnected'})
+                    try:
+                        await round.consumer2.send_json({ 'gameOver': 'disconnected'})
+                    except:
+                        pass
 
         await self.close()
 
