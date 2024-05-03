@@ -14,6 +14,7 @@ import {
   gameResultsUpdate,
   gameWaitingModalDescriptionUpdate,
 } from "./gameHTMLHandler.js";
+import MusicPlayer from "../../utils/Audio.js";
 
 let socket;
 let allowedKeys;
@@ -33,9 +34,15 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
   const child = document.querySelector("#gameWaitingCloseButton");
   child.addEventListener("click", closeSocket);
 
+  const musicPath =
+    getState().difficulty === "easy" ? "/easy.mp3" : "/hard.mp3";
+  const musicPlayer = new MusicPlayer(musicPath);
+
   socket.onopen = () => {
     console.log("WebSocket connection opened");
     animate();
+    musicPlayer.playMusic();
+
     let message = {
       ready: true,
       difficulty: getState().difficulty,
@@ -93,6 +100,13 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
         return;
       }
       dispatch("endReason", data.gameOver);
+      musicPlayer.stopMusic();
+      if (gameMode !== "local") {
+        const effect =
+          getState().nickname === data.winner ? "/win.mp3" : "/lose.mp3";
+        musicPlayer.playSoundEffect(effect);
+        console.log(effect);
+      }
       if (waitModalFlag) closeModal();
       modalInit("gameOverModal", ["gameOverButton"]);
       socket.close();
@@ -111,6 +125,7 @@ export const socketHandler = (animate, moveFunction, openModal, closeModal) => {
     window.removeEventListener("popstate", closeSocket);
     document.removeEventListener("keydown", keydownHandler);
     document.removeEventListener("keyup", keyupHandler);
+    musicPlayer.stopMusic();
   };
 };
 
