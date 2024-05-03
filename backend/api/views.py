@@ -99,7 +99,7 @@ class MeAPI(APIView):
                 {
                     "message": "로그인이 필요합니다."
                 }
-                , status=status.HTTP_401_UNAUTHORIZED)
+                , status=status.HTTP_204_NO_CONTENT)
         intra_id = request.user.intra_id
         user = User.objects.get(intra_id=intra_id)
         serializer = UserSerializer(user)
