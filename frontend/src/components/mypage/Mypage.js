@@ -29,6 +29,7 @@ export default class Mypage extends Component {
           const $mypageModal = this.target.querySelector("#mypageRestriction");
           new MypageRestrictionModal($mypageModal, this.state);
           modalInit("mypageRestrictionModal", ["loginFirstButton"], []);
+          dispatch("isLoggedIn", false);
         }
       );
     } else {

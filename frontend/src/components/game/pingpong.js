@@ -1,21 +1,13 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
-
 import { getState } from "../../state/store.js";
 
-const paddle = (position_x, position_z, color) => {
-  const geometry = new THREE.BoxGeometry(1, 3, 5);
-  const material = new THREE.MeshPhongMaterial({
-    color: color,
-    shininess: 150,
-    specular: 0x333333,
-  });
-
-  const pad = new THREE.Mesh(geometry, material);
-  pad.castShadow = true;
-  pad.position.set(position_x, 1.2, position_z);
-  return pad;
-};
+let scene;
+let renderer;
+let camera;
+let ball;
+let paddle1;
+let paddle2;
 
 export const pingpong = () => {
   try {
@@ -23,10 +15,10 @@ export const pingpong = () => {
     if (WebGL.isWebGLAvailable() === false) throw new Error("WebGL Error");
 
     // 오브젝트를 놓을 공간
-    const scene = new THREE.Scene();
+    scene = new THREE.Scene();
 
     // 정보를 화면에 그려줄 렌더러
-    const renderer = new THREE.WebGLRenderer({
+    renderer = new THREE.WebGLRenderer({
       alpha: true, // 투명한 배경을 가진 캔버스 사용 가능
       antialias: true, // 렌더링 된 이미지 품질을 향상시키는 안티앨리어싱 활성화
     });
@@ -41,8 +33,12 @@ export const pingpong = () => {
     const ASPECT = WIDTH / HEIGHT; // 시야의 가로세로비 -> 컨테이너 가로세로비와 같은 크기로 해주는 게 좋음
     const NEAR = 1; // 렌더링 할 물체 거리의 하한값, 카메라로부터 거리가 이 값보다 작은 물체는 화면에 그리지 않음 0보다 크고 FAR보다 작은 값을 가질 수 있다.
     const FAR = 10000; // 렌더링 할 물체 거리의 상한값, 너무 멀리 있는 물체를 그리지 않는 것, 카메라로부터 거리가 이 값보다 큰 물체는 화면에 그리지 않음
-    const camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
-    camera.position.set(0, 15, 35); // 0 40, 0 // 0 15 35
+    camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
+    camera.position.set(
+      0,
+      -0.01875 * WIDTH + 40.3125,
+      -0.04375 * WIDTH + 94.0625
+    );
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // 광원
@@ -103,33 +99,68 @@ export const pingpong = () => {
       specular: 0x222222,
     });
 
-    const ball = new THREE.Mesh(geometry, material);
+    ball = new THREE.Mesh(geometry, material);
     ball.position.set(0, 5, 0);
     ball.castShadow = true;
     ball.receiveShadow = true;
     scene.add(ball);
 
-    const paddle1 = paddle(-13, 0, 0xff0000);
-    const paddle2 = paddle(13, 0, 0x0000ff);
+    paddle1 = paddle(-13, 0, 0xff0000);
+    paddle2 = paddle(13, 0, 0x0000ff);
     scene.add(paddle1);
     scene.add(paddle2);
     // const dirLightShadowMapViewer = new ShadowMapViewer(dirLight)
-
-    function animate() {
-      requestAnimationFrame(animate); // https://inpa.tistory.com/entry/%F0%9F%8C%90-requestAnimationFrame-%EA%B0%80%EC%9D%B4%EB%93%9C
-      renderer.render(scene, camera);
-    }
-
-    function objectsMovement(ballPosition, player1Position, player2Position) {
-      ball.position.fromArray(ballPosition);
-      paddle1.position.fromArray(player1Position);
-      paddle2.position.fromArray(player2Position);
-    }
-
-    return [animate, objectsMovement];
   } catch (e) {
     console.log(e);
     const warning = WebGL.getWebGLErrorMessage();
     document.getElementById("container").appendChild(warning);
   }
+};
+
+export function animate() {
+  // https://inpa.tistory.com/entry/%F0%9F%8C%90-requestAnimationFrame-%EA%B0%80%EC%9D%B4%EB%93%9C
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+export function setPos(ballPosition, player1Position, player2Position) {
+  ball.position.fromArray(ballPosition);
+  paddle1.position.fromArray(player1Position);
+  paddle2.position.fromArray(player2Position);
+}
+
+export function resizePong() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  console.log("resizePong", width, height);
+
+  camera.aspect = width / height; // 1) camera 종횡비, 포지션 업데이트
+  camera.position.set(
+    0,
+    -0.01875 * width + 40.3125,
+    -0.04375 * width + 94.0625
+  );
+  camera.updateProjectionMatrix(); // 2) 카메라의 프로젝션 매트릭스 업데이트
+
+  renderer.setSize(width, height); // 3) renderer 사이즈 업데이트
+  renderer.render(scene, camera); // 4) final 렌더링
+}
+
+export function removeResizePong() {
+  window.removeEventListener("resize", resizePong);
+  window.removeEventListener("popstate", removeResizePong);
+}
+
+const paddle = (position_x, position_z, color) => {
+  const geometry = new THREE.BoxGeometry(1, 3, 5);
+  const material = new THREE.MeshPhongMaterial({
+    color: color,
+    shininess: 150,
+    specular: 0x333333,
+  });
+
+  const pad = new THREE.Mesh(geometry, material);
+  pad.castShadow = true;
+  pad.position.set(position_x, 1.2, position_z);
+  return pad;
 };
