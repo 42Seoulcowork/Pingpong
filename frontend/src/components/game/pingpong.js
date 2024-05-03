@@ -111,7 +111,7 @@ export const pingpong = () => {
     scene.add(paddle2);
     // const dirLightShadowMapViewer = new ShadowMapViewer(dirLight)
   } catch (e) {
-    console.log(e);
+    console.error(e);
     const warning = WebGL.getWebGLErrorMessage();
     document.getElementById("container").appendChild(warning);
   }
@@ -132,7 +132,6 @@ export function setPos(ballPosition, player1Position, player2Position) {
 export function resizePong() {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  console.log("resizePong", width, height);
 
   camera.aspect = width / height; // 1) camera 종횡비, 포지션 업데이트
   const yPos =
