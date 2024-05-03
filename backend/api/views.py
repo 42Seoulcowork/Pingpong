@@ -128,5 +128,5 @@ class LogoutAPI(APIView):
             {
                 "message": "로그아웃이 완료되었습니다."
             },
-            status=status.HTTP_204_NO_CONTENT
+            status=status.HTTP_200_OK
         )
