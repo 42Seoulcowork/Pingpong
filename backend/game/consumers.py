@@ -116,7 +116,7 @@ class RemoteGameConsumer(LocalGameConsumer):
             self.status = 'end'
             self.opponent.status = 'end'
             try:
-                await self.send_json({ 'gameOver': 'disconnected'})
+                await self.opponent.send_json({ 'gameOver': 'disconnected'})
             except:
                 pass
 
